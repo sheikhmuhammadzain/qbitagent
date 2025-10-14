@@ -305,7 +305,7 @@ async def list_models():
 @app.post("/api/connect")
 async def connect_to_server(request: ConnectRequest, http_request: Request):
     """Connect to an MCP server"""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     lock = get_lock_for_user(username)
     async with lock:
         try:
@@ -372,7 +372,7 @@ async def connect_to_server(request: ConnectRequest, http_request: Request):
 @app.post("/api/disconnect")
 async def disconnect_from_server(http_request: Request):
     """Disconnect from MCP server"""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     lock = get_lock_for_user(username)
     async with lock:
         if user_clients.get(username) is None:
@@ -457,7 +457,7 @@ async def get_status(http_request: Request):
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, http_request: Request):
     """Send a chat message with intelligent LLM tool calling"""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     if user_clients.get(username) is None or user_agents.get(username) is None:
         raise HTTPException(status_code=400, detail="Not connected to MCP server. Connect first.")
     
@@ -515,7 +515,7 @@ async def chat_stream(message: str, http_request: Request):
     
     Automatically includes Notion and Web Search tools when available.
     """
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     
     # Check if we have any MCP servers (SQLite, Notion, or Web Search)
     has_sqlite = user_clients.get(username) is not None
@@ -638,7 +638,7 @@ async def chat_multi_server(request: ChatRequest, http_request: Request):
     in a single conversation. The LLM will automatically route tool calls to the
     appropriate server based on the user's request.
     """
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     session_id = http_request.session.get("session_id") or str(uuid.uuid4())
     http_request.session["session_id"] = session_id
     
@@ -717,7 +717,7 @@ async def chat_multi_server(request: ChatRequest, http_request: Request):
 @app.post("/api/clear")
 async def clear_conversation(http_request: Request):
     """Clear conversation history"""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     if user_agents.get(username):
         user_agents[username].clear_history()
     if user_stream_agents.get(username):
@@ -735,7 +735,7 @@ async def clear_conversation(http_request: Request):
 @app.get("/api/history")
 async def get_history(http_request: Request, limit: int = 50):
     """Return recent chat history for the current session (ascending order)."""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     session_id = http_request.session.get("session_id")
     if not session_id:
         return {"messages": []}
@@ -761,7 +761,7 @@ async def get_history(http_request: Request, limit: int = 50):
 @app.post("/api/upload")
 async def upload_file(request: Request, file: UploadFile = File(...)):
     """Upload and convert CSV/Excel file to SQLite"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
     
     # Validate file type
     allowed_extensions = {'.csv', '.xlsx', '.xls'}
@@ -932,32 +932,46 @@ async def get_database_info(database_id: str, request: Request):
     """Get detailed database information"""
     try:
         username = get_user_or_anonymous(request)
+        logger.info(f"Getting database info for {database_id} for user {username}")
+        
         pipeline = get_pipeline(username)
         
         try:
             db_metadata = pipeline.get_database_by_id(database_id)
+            logger.info(f"Found database {database_id} in user {username}'s directory")
         except ValueError as e:
             # Database not found for current user, try to find it across all users
-            logger.warning(f"Database {database_id} not found for user {username}, searching all users")
+            logger.warning(f"Database {database_id} not found for user {username}, searching all users: {e}")
             
             # Search through all user directories
             uploads_dir = Path("uploads")
             if not uploads_dir.exists():
+                logger.error(f"Uploads directory does not exist: {uploads_dir}")
                 raise HTTPException(status_code=404, detail="Database not found")
             
             found_metadata = None
-            for user_dir in uploads_dir.iterdir():
-                if user_dir.is_dir() and user_dir.name != "databases" and user_dir.name != "original_files":
-                    user_pipeline = DataPipeline(upload_dir=str(user_dir))
-                    try:
-                        user_metadata = user_pipeline.get_database_by_id(database_id)
-                        found_metadata = user_metadata
-                        logger.info(f"Found database {database_id} in user directory: {user_dir.name}")
-                        break
-                    except ValueError:
-                        continue
+            try:
+                for user_dir in uploads_dir.iterdir():
+                    if user_dir.is_dir() and user_dir.name not in ["databases", "original_files"]:
+                        logger.info(f"Searching in user directory: {user_dir.name}")
+                        try:
+                            user_pipeline = DataPipeline(upload_dir=str(user_dir))
+                            user_metadata = user_pipeline.get_database_by_id(database_id)
+                            found_metadata = user_metadata
+                            logger.info(f"Found database {database_id} in user directory: {user_dir.name}")
+                            break
+                        except ValueError as ve:
+                            logger.debug(f"Database {database_id} not found in {user_dir.name}: {ve}")
+                            continue
+                        except Exception as ue:
+                            logger.error(f"Error searching in {user_dir.name}: {ue}")
+                            continue
+            except Exception as se:
+                logger.error(f"Error during cross-user search: {se}")
+                raise HTTPException(status_code=500, detail=f"Search error: {str(se)}")
             
             if not found_metadata:
+                logger.warning(f"Database {database_id} not found in any user directory")
                 raise HTTPException(status_code=404, detail="Database not found")
             
             db_metadata = found_metadata
@@ -971,33 +985,47 @@ async def get_database_info(database_id: str, request: Request):
         import aiosqlite
         
         tables_info = []
-        async with aiosqlite.connect(db_path) as db:
-            for table_meta in db_metadata.get("tables", []):
-                table_name = table_meta["name"]
-                
-                # Get column info
-                cursor = await db.execute(f"PRAGMA table_info({table_name})")
-                columns_raw = await cursor.fetchall()
-                
-                columns = [
-                    {
-                        "name": col[1],
-                        "type": col[2],
-                        "nullable": not bool(col[3]),
-                        "primary_key": bool(col[5])
-                    }
-                    for col in columns_raw
-                ]
-                
-                # Get row count
-                cursor = await db.execute(f"SELECT COUNT(*) FROM {table_name}")
-                row_count = (await cursor.fetchone())[0]
-                
-                tables_info.append({
-                    "name": table_name,
-                    "row_count": row_count,
-                    "columns": columns
-                })
+        try:
+            async with aiosqlite.connect(db_path) as db:
+                for table_meta in db_metadata.get("tables", []):
+                    table_name = table_meta["name"]
+                    logger.info(f"Getting info for table: {table_name}")
+                    
+                    try:
+                        # Get column info
+                        cursor = await db.execute(f"PRAGMA table_info({table_name})")
+                        columns_raw = await cursor.fetchall()
+                        
+                        columns = [
+                            {
+                                "name": col[1],
+                                "type": col[2],
+                                "nullable": not bool(col[3]),
+                                "primary_key": bool(col[5])
+                            }
+                            for col in columns_raw
+                        ]
+                        
+                        # Get row count
+                        cursor = await db.execute(f"SELECT COUNT(*) FROM {table_name}")
+                        row_count = (await cursor.fetchone())[0]
+                        
+                        tables_info.append({
+                            "name": table_name,
+                            "row_count": row_count,
+                            "columns": columns
+                        })
+                        
+                        logger.info(f"Successfully processed table {table_name}: {row_count} rows, {len(columns)} columns")
+                    except Exception as te:
+                        logger.error(f"Error processing table {table_name}: {te}")
+                        # Continue with other tables even if one fails
+                        continue
+        except Exception as db_error:
+            logger.error(f"Error connecting to database {db_path}: {db_error}")
+            raise HTTPException(status_code=500, detail=f"Database connection error: {str(db_error)}")
+        
+        logger.info(f"Successfully retrieved info for database {database_id}: {len(tables_info)} tables")
         
         return {
             "id": database_id,
@@ -1018,7 +1046,7 @@ async def get_database_info(database_id: str, request: Request):
 async def delete_database(database_id: str, request: Request):
     """Delete an uploaded database"""
     try:
-        pipeline = get_pipeline(require_user(request))
+        pipeline = get_pipeline(get_user_or_anonymous(request))
         db_metadata = pipeline.get_database_by_id(database_id)
         
         # If this is the active database, disconnect first
