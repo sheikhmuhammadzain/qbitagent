@@ -147,6 +147,16 @@ def require_user(request: Request) -> str:
         raise HTTPException(status_code=401, detail="Authentication required")
     return username
 
+def get_user_or_anonymous(request: Request) -> str:
+    """Get current user or return anonymous for public endpoints"""
+    username = request.session.get("username")
+    if not username:
+        # For public endpoints, return anonymous user
+        username = "anonymous"
+        request.session["username"] = username
+        request.session["session_id"] = str(uuid.uuid4())
+    return username
+
 def get_pipeline(username: str) -> DataPipeline:
     # separate storage per user
     return DataPipeline(upload_dir=str(Path("uploads") / username))
@@ -893,7 +903,7 @@ async def switch_database(request: dict, http_request: Request):
 async def get_database_info(database_id: str, request: Request):
     """Get detailed database information"""
     try:
-        pipeline = get_pipeline(require_user(request))
+        pipeline = get_pipeline(get_user_or_anonymous(request))
         db_metadata = pipeline.get_database_by_id(database_id)
         db_path = Path(db_metadata["db_path"])
         
@@ -1024,7 +1034,7 @@ async def get_notion_client(username: str, workspace_id: str) -> Optional[Notion
 @app.get("/api/notion/auth")
 async def notion_auth(request: Request):
     """Initiate Notion OAuth flow"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
     
     if not NOTION_CLIENT_ID:
         raise HTTPException(
@@ -1055,7 +1065,7 @@ async def notion_auth(request: Request):
 @app.get("/api/notion/callback")
 async def notion_callback(code: str, state: str, request: Request):
     """Handle Notion OAuth callback"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
     
     # Verify state (CSRF protection)
     stored_state = request.session.get("notion_oauth_state")
@@ -1185,7 +1195,12 @@ async def notion_callback(code: str, state: str, request: Request):
 @app.get("/api/notion/workspaces")
 async def list_notion_workspaces(request: Request):
     """List user's connected Notion workspaces"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
+    
+    # Check if Notion is configured
+    if not NOTION_CLIENT_ID:
+        logger.warning("Notion OAuth not configured - returning empty workspaces")
+        return {"workspaces": []}
     
     import aiosqlite
     workspaces = []
@@ -1208,7 +1223,14 @@ async def list_notion_workspaces(request: Request):
 @app.post("/api/notion/connect")
 async def connect_notion_mcp(workspace_id: str, request: Request):
     """Connect to Notion MCP for a specific workspace"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
+    
+    # Check if Notion is configured
+    if not NOTION_CLIENT_ID:
+        raise HTTPException(
+            status_code=503, 
+            detail="Notion OAuth not configured. Please set NOTION_CLIENT_ID in .env"
+        )
     
     client = await get_notion_client(username, workspace_id)
     if not client:
@@ -1225,7 +1247,7 @@ async def connect_notion_mcp(workspace_id: str, request: Request):
 @app.delete("/api/notion/disconnect/{workspace_id}")
 async def disconnect_notion(workspace_id: str, request: Request):
     """Disconnect Notion workspace"""
-    username = require_user(request)
+    username = get_user_or_anonymous(request)
     
     # Close client if exists
     if username in user_notion_clients:

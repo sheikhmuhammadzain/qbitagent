@@ -58,6 +58,7 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
     try {
       const res = await fetch("/api/notion/workspaces", {
         credentials: "include",
+        cache: "no-cache",
       });
       
       if (res.ok) {
@@ -65,9 +66,17 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
         const newWorkspaces = data.workspaces || [];
         setWorkspaces(newWorkspaces);
         onWorkspacesChange?.(newWorkspaces);
+      } else {
+        console.warn("Failed to load Notion workspaces:", res.status, res.statusText);
+        // Set empty workspaces instead of failing
+        setWorkspaces([]);
+        onWorkspacesChange?.([]);
       }
     } catch (error) {
       console.error("Failed to load Notion workspaces:", error);
+      // Set empty workspaces instead of failing
+      setWorkspaces([]);
+      onWorkspacesChange?.([]);
     }
   };
 
@@ -116,35 +125,40 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
       const res = await fetch(`/api/notion/connect?workspace_id=${workspaceId}`, {
         method: "POST",
         credentials: "include",
+        cache: "no-cache",
       });
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Connection failed:", res.status, errorText);
+        toast({
+          title: "Connection failed",
+          description: `Server error: ${res.status}`,
+          variant: "destructive",
+        });
+        return;
+      }
       
       const data = await res.json();
       
-      if (res.ok) {
-        // Update workspace state
-        const updatedWorkspaces = workspaces.map(w => 
-          w.workspace_id === workspaceId 
-            ? { ...w, connected: true, tools: data.tools }
-            : w
-        );
-        setWorkspaces(updatedWorkspaces);
-        onWorkspacesChange?.(updatedWorkspaces);
-        
-        toast({
-          title: "Workspace connected",
-          description: `Connected with ${data.tool_count || 0} tools available`,
-        });
-        
-        // Notify parent
-        onWorkspaceConnect?.(workspaceId, data.tools || []);
-      } else {
-        toast({
-          title: "Connection failed",
-          description: data.detail || "Failed to connect workspace",
-          variant: "destructive",
-        });
-      }
+      // Update workspace state
+      const updatedWorkspaces = workspaces.map(w => 
+        w.workspace_id === workspaceId 
+          ? { ...w, connected: true, tools: data.tools }
+          : w
+      );
+      setWorkspaces(updatedWorkspaces);
+      onWorkspacesChange?.(updatedWorkspaces);
+      
+      toast({
+        title: "Workspace connected",
+        description: `Connected with ${data.tool_count || 0} tools available`,
+      });
+      
+      // Notify parent
+      onWorkspaceConnect?.(workspaceId, data.tools || []);
     } catch (error) {
+      console.error("Connection error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Unknown error",
