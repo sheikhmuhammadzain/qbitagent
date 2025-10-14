@@ -41,11 +41,18 @@ export const DatabaseSelector = ({ onDatabaseChange, setConnected, setTools, set
         setSelectedDatabase(activeDatabaseId);
         setConnected(true);
         
-        // Load database info
-        await loadDatabaseInfo(activeDatabaseId);
-        
-        // Sync localStorage
-        localStorage.setItem('selectedDatabaseId', activeDatabaseId);
+        // Load database info (with error handling)
+        try {
+          await loadDatabaseInfo(activeDatabaseId);
+          // Sync localStorage only if successful
+          localStorage.setItem('selectedDatabaseId', activeDatabaseId);
+        } catch (err) {
+          console.error("Failed to restore database info:", err);
+          // Clear session if database is not accessible
+          setSelectedDatabase("");
+          setConnected(false);
+          localStorage.removeItem('selectedDatabaseId');
+        }
         
         // Fetch tools
         try {
@@ -77,6 +84,16 @@ export const DatabaseSelector = ({ onDatabaseChange, setConnected, setTools, set
       setIsInfoExpanded(true);
     } catch (error) {
       console.error("Failed to load database info:", error);
+      // Clear database info on error
+      setDatabaseInfo(null);
+      setIsInfoExpanded(false);
+      
+      // Show user-friendly error message
+      toast({
+        title: "Database not accessible",
+        description: "This database may have been uploaded by a different user or no longer exists",
+        variant: "destructive",
+      });
     }
   };
 

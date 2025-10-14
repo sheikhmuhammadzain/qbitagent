@@ -815,7 +815,8 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
 async def list_databases(request: Request):
     """List all uploaded databases"""
     try:
-        pipeline = get_pipeline(require_user(request))
+        username = get_user_or_anonymous(request)
+        pipeline = get_pipeline(username)
         result = pipeline.list_databases()
         
         # Include active database ID from session
@@ -831,14 +832,41 @@ async def list_databases(request: Request):
 @app.post("/api/switch-database")
 async def switch_database(request: dict, http_request: Request):
     """Switch to a different uploaded database"""
-    username = require_user(http_request)
+    username = get_user_or_anonymous(http_request)
     database_id = request.get("database_id")
     if not database_id:
         raise HTTPException(status_code=400, detail="database_id is required")
     
     try:
         pipeline = get_pipeline(username)
-        db_metadata = pipeline.get_database_by_id(database_id)
+        
+        try:
+            db_metadata = pipeline.get_database_by_id(database_id)
+        except ValueError as e:
+            # Database not found for current user, try to find it across all users
+            logger.warning(f"Database {database_id} not found for user {username}, searching all users")
+            
+            # Search through all user directories
+            uploads_dir = Path("uploads")
+            if not uploads_dir.exists():
+                raise HTTPException(status_code=404, detail="Database not found")
+            
+            found_metadata = None
+            for user_dir in uploads_dir.iterdir():
+                if user_dir.is_dir() and user_dir.name != "databases" and user_dir.name != "original_files":
+                    user_pipeline = DataPipeline(upload_dir=str(user_dir))
+                    try:
+                        user_metadata = user_pipeline.get_database_by_id(database_id)
+                        found_metadata = user_metadata
+                        logger.info(f"Found database {database_id} in user directory: {user_dir.name}")
+                        break
+                    except ValueError:
+                        continue
+            
+            if not found_metadata:
+                raise HTTPException(status_code=404, detail="Database not found")
+            
+            db_metadata = found_metadata
         db_path = db_metadata["db_path"]
         
         logger.info(f"Switching to database: {db_metadata['name']} ({db_path})")
@@ -903,8 +931,37 @@ async def switch_database(request: dict, http_request: Request):
 async def get_database_info(database_id: str, request: Request):
     """Get detailed database information"""
     try:
-        pipeline = get_pipeline(get_user_or_anonymous(request))
-        db_metadata = pipeline.get_database_by_id(database_id)
+        username = get_user_or_anonymous(request)
+        pipeline = get_pipeline(username)
+        
+        try:
+            db_metadata = pipeline.get_database_by_id(database_id)
+        except ValueError as e:
+            # Database not found for current user, try to find it across all users
+            logger.warning(f"Database {database_id} not found for user {username}, searching all users")
+            
+            # Search through all user directories
+            uploads_dir = Path("uploads")
+            if not uploads_dir.exists():
+                raise HTTPException(status_code=404, detail="Database not found")
+            
+            found_metadata = None
+            for user_dir in uploads_dir.iterdir():
+                if user_dir.is_dir() and user_dir.name != "databases" and user_dir.name != "original_files":
+                    user_pipeline = DataPipeline(upload_dir=str(user_dir))
+                    try:
+                        user_metadata = user_pipeline.get_database_by_id(database_id)
+                        found_metadata = user_metadata
+                        logger.info(f"Found database {database_id} in user directory: {user_dir.name}")
+                        break
+                    except ValueError:
+                        continue
+            
+            if not found_metadata:
+                raise HTTPException(status_code=404, detail="Database not found")
+            
+            db_metadata = found_metadata
+        
         db_path = Path(db_metadata["db_path"])
         
         if not db_path.exists():
