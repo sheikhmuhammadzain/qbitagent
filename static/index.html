@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Database Assistant - Streaming</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+        }
+        .header h1 {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .streaming-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-connected { background: #10b981; }
+        .status-disconnected { background: #ef4444; }
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 320px;
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message-user { text-align: right; }
+        .message-assistant { text-align: left; }
+        .message-content {
+            display: inline-block;
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+        .message-user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .message-assistant .message-content {
+            background: white;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+        }
+        .streaming-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+.reasoning-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #92400e;
+        }
+        .reasoning-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .reasoning-content {
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .tool-calls {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .tool-call {
+            margin: 5px 0;
+            padding: 8px;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+        }
+        .tool-name {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .tool-executing { color: #f59e0b; }
+        .tool-result {
+            color: #10b981;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 5px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input, select, button {
+            padding: 12px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        input[type="text"] { flex: 1; }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover:not(:disabled) { transform: translateY(-2px); }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .button-secondary { background: #64748b !important; }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #475569;
+        }
+        .stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .tool-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            font-size: 13px;
+        }
+        .loading {
+            text-align: center;
+            color: #94a3b8;
+            padding: 20px;
+        }
+        .upload-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover {
+            border-color: #667eea;
+            background: #f8fafc;
+        }
+        .upload-zone.dragover {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+        .upload-icon {
+            font-size: 48px;
+        }
+        #uploadProgress {
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            animation: progress 1.5s infinite;
+        }
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        .database-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .button-icon {
+            padding: 12px !important;
+            width: auto !important;
+            margin-left: 5px !important;
+        }
+        /* Notion MCP Styles */
+        .notion-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #000;
+        }
+        .notion-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .notion-logo {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #000 0%, #2c2c2c 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .notion-workspace {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .workspace-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .workspace-icon {
+            font-size: 20px;
+        }
+        .workspace-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 13px;
+        }
+        .workspace-status {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #10b981;
+            color: white;
+            font-weight: bold;
+        }
+        .workspace-status.disconnected {
+            background: #94a3b8;
+        }
+        .workspace-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .btn-small {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            border-radius: 6px !important;
+        }
+        .btn-notion {
+            background: #000 !important;
+            color: white !important;
+        }
+        .btn-notion:hover {
+            background: #2c2c2c !important;
+        }
+        .btn-danger {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+        .notion-empty {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 20px 10px;
+        }
+        .notion-badge {
+            background: #000;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                🤖 AI Database Assistant
+                <span class="streaming-badge">⚡ STREAMING</span>
+                <span id="statusBadge" class="status-badge status-disconnected">Disconnected</span>
+            </h1>
+            <p>Real-time streaming with intelligent tool calling</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="stats">
+                    <h3 style="margin-bottom: 10px;">📊 Status</h3>
+                    <div class="stat-item"><span>Model:</span><span id="currentModel">-</span></div>
+                    <div class="stat-item"><span>Tools:</span><span id="toolCount">0</span></div>
+                    <div class="stat-item"><span>Messages:</span><span id="messageCount">0</span></div>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="upload-section">
+                    <h3 style="margin-bottom: 10px;">📁 Upload Data</h3>
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+                        <div class="upload-content">
+                            <span class="upload-icon">📤</span>
+                            <p>Drop CSV/Excel here</p>
+                            <button onclick="document.getElementById('fileInput').click()" type="button" style="margin-top: 10px;">
+                                Browse Files
+                            </button>
+                            <br><small style="color: #94a3b8;">Max 100MB</small>
+                        </div>
+                    </div>
+                    <div id="uploadProgress" style="display: none;">
+                        <div class="progress-bar"></div>
+                        <span class="progress-text" style="font-size: 12px; color: #667eea;">Uploading...</span>
+                    </div>
+                </div>
+
+                <!-- Database Selector -->
+                <div class="control-group">
+                    <label>Database:</label>
+                    <div style="display: flex; gap: 5px;">
+                        <select id="databaseSelect" style="flex: 1;" onchange="switchDatabase()">
+                            <option value="">Select database...</option>
+                        </select>
+                        <button onclick="refreshDatabases()" class="button-icon" type="button" title="Refresh">🔄</button>
+                    </div>
+                </div>
+
+                <div class="database-info" id="dbInfo" style="display: none;">
+                    <h4 style="margin-bottom: 8px;">📊 Database Info</h4>
+                    <div id="dbDetails"></div>
+                </div>
+
+                <div class="control-group">
+                    <label>Server:</label>
+                    <select id="serverSelect"><option value="SQLite">SQLite</option></select>
+                </div>
+
+                <div class="control-group">
+                    <label>Model:</label>
+                    <select id="modelSelect">
+                        <option value="z-ai/glm-4.5-air:free">GLM-4-Flash (FREE)</option>
+                        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                        <option value="anthropic/claude-3.7-sonnet">Claude 3.7 Sonnet (Reasoning)</option>
+                        <option value="deepseek/deepseek-r1">DeepSeek R1 (Reasoning)</option>
+                        <option value="deepseek/deepseek-reasoner">DeepSeek Reasoner</option>
+                        <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+                        <option value="google/gemini-pro">Gemini Pro</option>
+                    </select>
+                </div>
+
+                <button id="connectBtn" onclick="connect()">Connect SQLite</button>
+                <button id="disconnectBtn" onclick="disconnect()" class="button-secondary" disabled>Disconnect</button>
+
+                <!-- Notion MCP Section -->
+                <div class="notion-section">
+                    <div class="notion-header">
+                        <div class="notion-logo">N</div>
+                        <h3 style="margin: 0; font-size: 16px;">Notion MCP</h3>
+                        <span class="notion-badge">BETA</span>
+                    </div>
+                    
+                    <button onclick="connectNotion()" class="btn-notion" style="width: 100%; margin-bottom: 10px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
+                            <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.887-.748-.84l-15.177.887c-.56.047-.747.327-.747.887zm14.336.513c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/>
+                        </svg>
+                        Connect Notion Workspace
+                    </button>
+                    
+                    <div id="notionWorkspaces"></div>
+                    
+                    <div id="notionTools" style="margin-top: 10px; display: none;">
+                        <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">
+                            <strong>🛠️ Available Tools:</strong>
+                            <span id="notionToolCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="clearChat()" class="button-secondary" style="margin-top: 10px; width: 100%;">Clear Chat</button>
+
+                <div id="toolsList" style="display: none; margin-top: 15px;">
+                    <h3 style="margin-bottom: 10px;">🛠️ Tools</h3>
+                    <div id="toolsContainer"></div>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <div class="messages" id="messages">
+                    <div class="loading">Connect to start chatting!</div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <input type="text" id="messageInput" placeholder="Ask anything..." disabled onkeypress="if(event.key==='Enter') sendMessage()">
+                        <button id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let connected = false;
+        let messageCount = 0;
+        let currentTools = [];
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFileUpload();
+            refreshDatabases();
+        });
+
+        async function connect() {
+            const server = document.getElementById('serverSelect').value;
+            const model = document.getElementById('modelSelect').value;
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('connectBtn').textContent = 'Connecting...';
+
+            try {
+                const response = await fetch('/api/connect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ server_name: server, model: model })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    connected = true;
+                    currentTools = data.tools || [];
+                    document.getElementById('statusBadge').textContent = 'Connected';
+                    document.getElementById('statusBadge').className = 'status-badge status-connected';
+                    document.getElementById('currentModel').textContent = model.split('/')[1];
+                    document.getElementById('toolCount').textContent = currentTools.length;
+                    document.getElementById('messageInput').disabled = false;
+                    document.getElementById('sendBtn').disabled = false;
+                    document.getElementById('disconnectBtn').disabled = false;
+                    document.getElementById('connectBtn').textContent = 'Connect';
+
+                    if (currentTools.length > 0) {
+                        document.getElementById('toolsList').style.display = 'block';
+                        document.getElementById('toolsContainer').innerHTML = currentTools.map(tool => 
+                            `<div class="tool-item"><strong>${tool.name}</strong><br><small>${tool.description || ''}</small></div>`
+                        ).join('');
+                    }
+                    document.getElementById('messages').innerHTML = '';
+                } else {
+                    alert('Connection failed: ' + data.detail);
+                    document.getElementById('connectBtn').disabled = false;
+                    document.getElementById('connectBtn').textContent = 'Connect';
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                document.getElementById('connectBtn').disabled = false;
+                document.getElementById('connectBtn').textContent = 'Connect';
+            }
+        }
+
+        async function disconnect() {
+            await fetch('/api/disconnect', { method: 'POST' });
+            connected = false;
+            document.getElementById('statusBadge').textContent = 'Disconnected';
+            document.getElementById('statusBadge').className = 'status-badge status-disconnected';
+            document.getElementById('currentModel').textContent = '-';
+            document.getElementById('toolCount').textContent = '0';
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('disconnectBtn').disabled = true;
+            document.getElementById('connectBtn').disabled = false;
+            document.getElementById('toolsList').style.display = 'none';
+        }
+
+        function addMessage(role, content) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${role}`;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = content;
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            if (role === 'user' || role === 'assistant') {
+                messageCount++;
+                document.getElementById('messageCount').textContent = messageCount;
+            }
+            return messageDiv;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message || !connected) return;
+
+            addMessage('user', message);
+            input.value = '';
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            streamResponse(message);
+        }
+
+        function streamResponse(message) {
+            const assistantMessage = addMessage('assistant', '<span class="streaming-indicator"></span>');
+            const contentDiv = assistantMessage.querySelector('.message-content');
+
+            // Reasoning container (thinking)
+            const reasoningBox = document.createElement('div');
+            reasoningBox.className = 'reasoning-box';
+            reasoningBox.innerHTML = '<div class="reasoning-title">🧠 Thinking...</div><div class="reasoning-content" id="reasoningContent"></div>';
+            assistantMessage.appendChild(reasoningBox);
+            const reasoningContentDiv = reasoningBox.querySelector('#reasoningContent');
+
+            let fullText = '';
+            let reasoningText = '';
+            let toolCallsDiv = null;
+            let currentToolCall = null;
+
+            const eventSource = new EventSource('/api/chat/stream?' + new URLSearchParams({ message }));
+
+            eventSource.addEventListener('message', (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    const messagesDiv = document.getElementById('messages');
+
+                    switch (data.type) {
+                        case 'text_chunk':
+                            fullText += data.content;
+                            contentDiv.innerHTML = fullText + '<span class="streaming-indicator"></span>';
+                            break;
+
+                        case 'reasoning_chunk':
+                            reasoningText += data.content;
+                            reasoningContentDiv.textContent = reasoningText;
+                            break;
+
+                        case 'reasoning_summary':
+                            reasoningContentDiv.textContent += '\n\nSummary: ' + data.summary;
+                            break;
+
+                        case 'reasoning_encrypted':
+                            reasoningContentDiv.textContent += '\n\n[Encrypted reasoning block]';
+                            break;
+
+                        case 'tool_call_start':
+                            if (!toolCallsDiv) {
+                                toolCallsDiv = document.createElement('div');
+                                toolCallsDiv.className = 'tool-calls';
+                                toolCallsDiv.innerHTML = '<strong>🛠️ Tool Calls:</strong>';
+                                assistantMessage.appendChild(toolCallsDiv);
+                            }
+                            currentToolCall = document.createElement('div');
+                            currentToolCall.className = 'tool-call';
+                            currentToolCall.innerHTML = `<span class="tool-name">${data.tool_name}</span><span class="tool-executing"> ⏳ Starting...</span>`;
+                            toolCallsDiv.appendChild(currentToolCall);
+                            break;
+
+                        case 'tool_executing':
+                            if (currentToolCall) {
+                                currentToolCall.innerHTML = `
+                                    <span class="tool-name">${data.tool_name}</span>
+                                    <span class="tool-executing"> ⏳ Executing...</span>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 5px;">${JSON.stringify(data.arguments)}</div>
+                                `;
+                            }
+                            break;
+
+                        case 'tool_result':
+                            if (currentToolCall) {
+                                currentToolCall.innerHTML = `
+                                    <span class="tool-name">${data.tool_name}</span>
+                                    <span class="tool-result"> ✓ Done</span>
+                                    <div class="tool-result">${data.result}</div>
+                                `;
+                            }
+                            break;
+
+                        case 'synthesizing':
+                            contentDiv.innerHTML = fullText + '<span class="streaming-indicator"></span> ' + data.message;
+                            break;
+
+                        case 'done':
+                            contentDiv.innerHTML = fullText || '✓ Done';
+                            // Hide the reasoning box if nothing was streamed
+                            if (!reasoningText.trim()) {
+                                reasoningBox.style.display = 'none';
+                            }
+                            eventSource.close();
+                            document.getElementById('messageInput').disabled = false;
+                            document.getElementById('sendBtn').disabled = false;
+                            document.getElementById('messageInput').focus();
+                            break;
+
+                        case 'error':
+                            contentDiv.innerHTML = fullText + '<br><span style="color: #ef4444;">Error: ' + data.error + '</span>';
+                            eventSource.close();
+                            document.getElementById('messageInput').disabled = false;
+                            document.getElementById('sendBtn').disabled = false;
+                            break;
+                    }
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            eventSource.onerror = (error) => {
+                console.error('SSE error:', error);
+                contentDiv.innerHTML = fullText + '<br><span style="color: #ef4444;">Stream error</span>';
+                eventSource.close();
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+            };
+        }
+
+        async function clearChat() {
+            await fetch('/api/clear', { method: 'POST' });
+            document.getElementById('messages').innerHTML = '';
+            messageCount = 0;
+            document.getElementById('messageCount').textContent = '0';
+        }
+
+        // ===================== FILE UPLOAD & DATABASE MANAGEMENT =====================
+
+        function setupFileUpload() {
+            const zone = document.getElementById('uploadZone');
+            const input = document.getElementById('fileInput');
+            
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragover');
+            });
+            
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+            
+            zone.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    await uploadFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            input.addEventListener('change', async (e) => {
+                if (e.target.files.length > 0) {
+                    await uploadFile(e.target.files[0]);
+                }
+            });
+        }
+
+        async function uploadFile(file) {
+            const validTypes = ['text/csv', 'application/vnd.ms-excel', 
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            if (!validTypes.includes(file.type) && !file.name.match(/\.(csv|xlsx|xls)$/i)) {
+                alert('Invalid file type. Please upload CSV or Excel file.');
+                return;
+            }
+            
+            if (file.size > 100 * 1024 * 1024) {
+                alert('File too large. Maximum size is 100MB.');
+                return;
+            }
+            
+            const progressDiv = document.getElementById('uploadProgress');
+            progressDiv.style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(`Success! Database created with ${data.row_count || data.total_rows} rows`);
+                    await refreshDatabases();
+                    if (data.database_id) {
+                        await switchToDatabase(data.database_id);
+                    }
+                } else {
+                    alert('Upload failed: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                progressDiv.style.display = 'none';
+                document.getElementById('fileInput').value = '';
+            }
+        }
+
+        async function refreshDatabases() {
+            try {
+                const response = await fetch('/api/databases');
+                const data = await response.json();
+                
+                const select = document.getElementById('databaseSelect');
+                select.innerHTML = '<option value="">Select database...</option>';
+                
+                (data.databases || []).forEach(db => {
+                    const option = document.createElement('option');
+                    option.value = db.id;
+                    option.textContent = `${db.name} (${db.tables ? db.tables.length : 0} tables)`;
+                    if (db.is_active) option.selected = true;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to refresh databases:', error);
+            }
+        }
+
+        async function switchDatabase() {
+            const select = document.getElementById('databaseSelect');
+            const dbId = select.value;
+            if (!dbId) return;
+            await switchToDatabase(dbId);
+        }
+
+        async function switchToDatabase(dbId) {
+            try {
+                const response = await fetch('/api/switch-database', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ database_id: dbId })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Switched to ${data.database_name}`);
+                    await loadDatabaseInfo(dbId);
+                    
+                    // Update connection status
+                    connected = true;
+                    document.getElementById('statusBadge').textContent = 'Connected';
+                    document.getElementById('statusBadge').className = 'status-badge status-connected';
+                    document.getElementById('messageInput').disabled = false;
+                    document.getElementById('sendBtn').disabled = false;
+                    document.getElementById('disconnectBtn').disabled = false;
+                } else {
+                    const data = await response.json();
+                    alert('Failed to switch database: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function loadDatabaseInfo(dbId) {
+            try {
+                const response = await fetch(`/api/database/${dbId}/info`);
+                const data = await response.json();
+                
+                const infoDiv = document.getElementById('dbInfo');
+                const detailsDiv = document.getElementById('dbDetails');
+                
+                let html = '<ul style="margin: 0; padding-left: 20px;">';
+                data.tables.forEach(table => {
+                    html += `<li><strong>${table.name}</strong>: ${table.row_count} rows, ${table.columns.length} cols</li>`;
+                });
+                html += '</ul>';
+                
+                detailsDiv.innerHTML = html;
+                infoDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Failed to load database info:', error);
+            }
+        }
+    </script>
+</body>
+</html>

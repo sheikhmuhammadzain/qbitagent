@@ -1,0 +1,67 @@
+{
+  "databases": [
+    {
+      "id": "cfb04e49-9de9-4433-b7e0-393c9ee3f737",
+      "name": "batch_details.db",
+      "original_file": "batch_details.xlsx",
+      "db_path": "uploads\\databases\\cfb04e49-9de9-4433-b7e0-393c9ee3f737.db",
+      "tables": [
+        {
+          "name": "gme_batch_wip",
+          "row_count": 105907,
+          "column_count": 23
+        }
+      ],
+      "size_bytes": 22114304,
+      "uploaded_at": "2025-10-11T13:50:30.735516Z",
+      "is_active": false
+    },
+    {
+      "id": "bb06cdef-5fe4-4cf9-b05f-f64a20e33466",
+      "name": "bergerpaints2.db",
+      "original_file": "bergerpaints2.csv",
+      "db_path": "uploads\\databases\\bb06cdef-5fe4-4cf9-b05f-f64a20e33466.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 230
+        }
+      ],
+      "size_bytes": 40960,
+      "uploaded_at": "2025-10-11T13:50:40.480029Z",
+      "is_active": false
+    },
+    {
+      "id": "dfb55019-b019-4a74-b5fe-64ee98842433",
+      "name": "FINAL TERM EXAMS DATE SHEET - 1.1.db",
+      "original_file": "FINAL TERM EXAMS DATE SHEET - 1.1.xlsx",
+      "db_path": "uploads\\databases\\dfb55019-b019-4a74-b5fe-64ee98842433.db",
+      "tables": [
+        {
+          "name": "col_1_1",
+          "row_count": 243,
+          "column_count": 11
+        }
+      ],
+      "size_bytes": 40960,
+      "uploaded_at": "2025-10-11T15:29:29.446951Z",
+      "is_active": false
+    },
+    {
+      "id": "74f9ccc3-941e-4889-9728-c7ca7521d2aa",
+      "name": "salesdataset.db",
+      "original_file": "salesdataset.csv",
+      "db_path": "uploads\\databases\\74f9ccc3-941e-4889-9728-c7ca7521d2aa.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 13760
+        }
+      ],
+      "size_bytes": 2138112,
+      "uploaded_at": "2025-10-11T15:29:44.046433Z",
+      "is_active": true
+    }
+  ],
+  "active_database_id": "74f9ccc3-941e-4889-9728-c7ca7521d2aa"
+}

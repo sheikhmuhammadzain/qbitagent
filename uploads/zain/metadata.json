@@ -1,0 +1,147 @@
+{
+  "databases": [
+    {
+      "id": "1ffd551e-e27e-421b-b1c5-f15679f2c569",
+      "name": "bergerpaints2.db",
+      "original_file": "bergerpaints2.csv",
+      "db_path": "uploads\\zain\\databases\\1ffd551e-e27e-421b-b1c5-f15679f2c569.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 230
+        }
+      ],
+      "size_bytes": 40960,
+      "uploaded_at": "2025-10-11T15:59:04.016376Z",
+      "is_active": false
+    },
+    {
+      "id": "b56d30ef-8849-4ebf-83cf-8be1ee392a75",
+      "name": "EPCL VEHS Data (Mar23 - Mar24).db",
+      "original_file": "EPCL VEHS Data (Mar23 - Mar24).xlsx",
+      "db_path": "uploads\\zain\\databases\\b56d30ef-8849-4ebf-83cf-8be1ee392a75.db",
+      "tables": [
+        {
+          "name": "incident",
+          "row_count": 3874,
+          "column_count": 169
+        },
+        {
+          "name": "hazard_id",
+          "row_count": 1425,
+          "column_count": 169
+        },
+        {
+          "name": "audit",
+          "row_count": 1522,
+          "column_count": 50
+        },
+        {
+          "name": "audit_findings",
+          "row_count": 1031,
+          "column_count": 50
+        },
+        {
+          "name": "inspection",
+          "row_count": 1773,
+          "column_count": 50
+        },
+        {
+          "name": "inspection_findings",
+          "row_count": 3063,
+          "column_count": 50
+        }
+      ],
+      "size_bytes": 12566528,
+      "uploaded_at": "2025-10-11T16:05:31.493229Z",
+      "is_active": false
+    },
+    {
+      "id": "dbe06461-a388-462b-9e28-81f89f4800f8",
+      "name": "EPCL_VEHS_Data_Processed.db",
+      "original_file": "EPCL_VEHS_Data_Processed.xlsx",
+      "db_path": "uploads\\zain\\databases\\dbe06461-a388-462b-9e28-81f89f4800f8.db",
+      "tables": [
+        {
+          "name": "incident",
+          "row_count": 866,
+          "column_count": 72
+        },
+        {
+          "name": "hazard_id",
+          "row_count": 994,
+          "column_count": 35
+        },
+        {
+          "name": "audit",
+          "row_count": 1522,
+          "column_count": 36
+        },
+        {
+          "name": "audit_findings",
+          "row_count": 1029,
+          "column_count": 34
+        },
+        {
+          "name": "inspection",
+          "row_count": 1773,
+          "column_count": 41
+        },
+        {
+          "name": "inspection_findings",
+          "row_count": 3063,
+          "column_count": 37
+        },
+        {
+          "name": "relationships",
+          "row_count": 5377,
+          "column_count": 5
+        },
+        {
+          "name": "location_summary",
+          "row_count": 92,
+          "column_count": 3
+        },
+        {
+          "name": "department_summary",
+          "row_count": 41,
+          "column_count": 3
+        }
+      ],
+      "size_bytes": 11636736,
+      "uploaded_at": "2025-10-11T16:12:22.995002Z",
+      "is_active": false
+    },
+    {
+      "id": "ef407716-c822-4cb8-8a29-8ad56979f6bc",
+      "name": "social-media-calendar.db",
+      "original_file": "social-media-calendar.csv",
+      "db_path": "uploads\\zain\\databases\\ef407716-c822-4cb8-8a29-8ad56979f6bc.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 8
+        }
+      ],
+      "size_bytes": 16384,
+      "uploaded_at": "2025-10-11T16:42:46.070975Z",
+      "is_active": false
+    },
+    {
+      "id": "c4c07601-69e0-42fd-9b7e-31aec9f50305",
+      "name": "bergerpaints (1).db",
+      "original_file": "bergerpaints (1).csv",
+      "db_path": "uploads\\zain\\databases\\c4c07601-69e0-42fd-9b7e-31aec9f50305.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 212
+        }
+      ],
+      "size_bytes": 40960,
+      "uploaded_at": "2025-10-11T21:02:01.540103Z",
+      "is_active": true
+    }
+  ],
+  "active_database_id": "c4c07601-69e0-42fd-9b7e-31aec9f50305"
+}

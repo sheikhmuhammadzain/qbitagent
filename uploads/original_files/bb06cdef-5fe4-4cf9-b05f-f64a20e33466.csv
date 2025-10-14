@@ -1,0 +1,231 @@
+transaction_id,date,quarter,province,customer_id,customer_segment,product_id,product_name,product_category,quantity_sold_liters,price_per_liter,sales_amount,monthly_sales_target_crores,current_stock_level,data_type
+1001,1/5/2025,Q1,Punjab,CUST-8752,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,80,220,17600,3.5,4020,Actual
+1001,1/5/2025,Q1,Punjab,CUST-8752,Contractor,P-INT-05,MaxPro,Interior Emulsion,120,480,57600,3.5,3352,Actual
+1002,1/8/2025,Q1,Sindh,CUST-5291,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,50,850,42500,3.5,2450,Actual
+1003,1/10/2025,Q1,Khyber Pakhtunkhwa,CUST-9150,Standard,P-WFN-03,Imperia Grande,Wood Finish,12,920,11040,3.5,1188,Actual
+1004,1/12/2025,Q1,Sindh,CUST-7325,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,80,280,22400,3.5,3420,Actual
+1004,1/12/2025,Q1,Sindh,CUST-7325,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,100,560,56000,3.5,1965,Actual
+1005,1/13/2025,Q1,Balochistan,CUST-1925,Standard,P-EXT-03,Walmasta,Exterior Paint,40,330,13200,3.5,4260,Actual
+1006,1/15/2025,Q1,Punjab,CUST-3729,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,65,720,46800,3.5,2935,Actual
+1007,1/16/2025,Q1,Sindh,CUST-8241,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,150,840,126000,3.5,2300,Actual
+1008,1/18/2025,Q1,Punjab,CUST-1168,Standard,P-WFN-01,Sanding Sealer,Wood Finish,22,650,14300,3.5,1478,Actual
+1009,1/19/2025,Q1,Khyber Pakhtunkhwa,CUST-4883,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,35,890,31150,3.5,1565,Actual
+1010,1/21/2025,Q1,Sindh,CUST-6031,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,45,610,27450,3.5,2755,Actual
+1011,1/22/2025,Q1,Punjab,CUST-2519,Contractor,P-ENM-01,VIP Super Gloss Enamel,Enamels,55,580,31900,3.5,1945,Actual
+1011,1/22/2025,Q1,Punjab,CUST-2519,Contractor,P-PRM-02,Red Oxide Primer,Primers & Putty,30,350,10500,3.5,2870,Actual
+1012,1/24/2025,Q1,Punjab,CUST-7742,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,80,855,68400,3.5,2220,Actual
+1013,1/25/2025,Q1,Sindh,CUST-5112,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,70,555,38850,3.5,1795,Actual
+1014,1/27/2025,Q1,Punjab,CUST-4098,Premium,P-WFN-02,Gloss Lacquer,Wood Finish,15,680,10200,3.5,1385,Actual
+1015,1/28/2025,Q1,Khyber Pakhtunkhwa,CUST-9528,Standard,P-INT-05,MaxPro,Interior Emulsion,28,480,13440,3.5,3472,Actual
+1016,1/30/2025,Q1,Sindh,CUST-1288,Contractor,P-EXT-03,Walmasta,Exterior Paint,180,325,58500,3.8,4080,Actual
+1017,1/31/2025,Q1,Punjab,CUST-6331,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,32,710,22720,3.8,2903,Actual
+1018,2/2/2025,Q1,Punjab,CUST-7054,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,90,860,77400,3.8,2130,Actual
+1019,2/3/2025,Q1,Sindh,CUST-2814,Standard,P-PRM-03,Elegance Ultra Seal,Primers & Putty,40,310,12400,3.8,3860,Actual
+1020,2/5/2025,Q1,Khyber Pakhtunkhwa,CUST-5871,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,110,550,60500,3.8,1685,Actual
+1021,2/6/2025,Q1,Punjab,CUST-3338,Premium,P-WFN-01,Sanding Sealer,Wood Finish,18,660,11880,3.8,1460,Actual
+1022,2/8/2025,Q1,Sindh,CUST-8902,Standard,P-INT-04,Elegance Desire,Interior Emulsion,30,655,19650,3.8,3146,Actual
+1023,2/9/2025,Q1,Punjab,CUST-1776,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,150,280,42000,3.8,3370,Actual
+1023,2/9/2025,Q1,Punjab,CUST-1776,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,200,835,167000,3.8,2040,Actual
+1024,2/11/2025,Q1,Sindh,CUST-6421,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,45,900,40500,3.8,1520,Actual
+1025,2/12/2025,Q1,Khyber Pakhtunkhwa,CUST-7652,Standard,P-ENM-02,NU Enamel,Enamels,25,450,11250,3.8,2475,Actual
+1026,2/14/2025,Q1,Punjab,CUST-4501,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,38,715,27170,3.8,2865,Actual
+1027,2/15/2025,Q1,Balochistan,CUST-2998,Contractor,P-EXT-03,Walmasta,Exterior Paint,60,320,19200,3.8,4200,Actual
+1028,2/17/2025,Q1,Sindh,CUST-9110,Premium,P-WFN-04,Imperia Polyester,Wood Finish,10,1100,11000,3.8,990,Actual
+1029,2/18/2025,Q1,Punjab,CUST-5001,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,145,560,81200,3.8,1540,Actual
+1030,2/20/2025,Q1,Punjab,CUST-8083,Standard,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,60,285,17100,3.8,3360,Actual
+1031,2/21/2025,Q1,Sindh,CUST-2345,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,100,865,86500,3.8,2140,Actual
+1032,2/23/2025,Q1,Khyber Pakhtunkhwa,CUST-7390,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,33,615,20295,3.8,2722,Actual
+1033,2/24/2025,Q1,Punjab,CUST-1588,Contractor,P-INT-02,Elegance Emulsion,Interior Emulsion,110,705,77550,3.8,2755,Actual
+1034,2/26/2025,Q1,Sindh,CUST-6899,Premium,P-WFN-02,Gloss Lacquer,Wood Finish,20,690,13800,3.8,1365,Actual
+1035,2/27/2025,Q1,Punjab,CUST-3030,Standard,P-EXT-03,Walmasta,Exterior Paint,90,330,29700,4,4110,Actual
+1036,3/1/2025,Q1,Sindh,CUST-4752,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,120,280,33600,4,3195,Actual
+1036,3/1/2025,Q1,Sindh,CUST-4752,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,130,880,114400,4,1390,Actual
+1037,3/2/2025,Q1,Khyber Pakhtunkhwa,CUST-8813,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,40,860,34400,4,2100,Actual
+1038,3/4/2025,Q1,Punjab,CUST-1045,Standard,P-PRM-04,SPD Wall Putty,Primers & Putty,50,220,11000,4,4050,Actual
+1039,3/5/2025,Q1,Sindh,CUST-7762,Contractor,P-INT-05,MaxPro,Interior Emulsion,150,475,71250,4,3322,Actual
+1040,3/7/2025,Q1,Punjab,CUST-5521,Premium,P-WFN-03,Imperia Grande,Wood Finish,15,930,13950,4,1173,Actual
+1041,3/8/2025,Q1,Sindh,CUST-9901,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,42,720,30240,4,2823,Actual
+1042,3/10/2025,Q1,Punjab,CUST-2843,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,160,565,90400,4,1380,Actual
+1043,3/11/2025,Q1,Khyber Pakhtunkhwa,CUST-6211,Standard,P-EXT-03,Walmasta,Exterior Paint,75,335,25125,4,4035,Actual
+1044,3/13/2025,Q1,Sindh,CUST-4118,Premium,P-PRM-03,Elegance Ultra Seal,Primers & Putty,40,310,12400,4,3810,Actual
+1044,3/13/2025,Q1,Sindh,CUST-4118,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,110,870,95700,4,1990,Actual
+1045,3/14/2025,Q1,Balochistan,CUST-3141,Contractor,P-PRM-02,Red Oxide Primer,Primers & Putty,45,355,15975,4,2825,Actual
+1046,3/16/2025,Q1,Punjab,CUST-8190,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,40,590,23600,4,1905,Actual
+1047,3/17/2025,Q1,Sindh,CUST-1835,Contractor,P-INT-03,VIP Allrounder,Interior Emulsion,125,605,75625,4,2597,Actual
+1048,3/19/2025,Q1,Punjab,CUST-7088,Premium,P-WFN-01,Sanding Sealer,Wood Finish,25,670,16750,4,1435,Actual
+1049,3/20/2025,Q1,Khyber Pakhtunkhwa,CUST-5367,Standard,P-INT-04,Elegance Desire,Interior Emulsion,35,660,23100,4,3141,Actual
+1050,3/22/2025,Q1,Sindh,CUST-2678,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,60,910,54600,4,1460,Actual
+1051,3/23/2025,Q1,Punjab,CUST-9301,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,180,220,39600,4,3840,Actual
+1051,3/23/2025,Q1,Punjab,CUST-9301,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,220,840,184800,4,1880,Actual
+1052,3/25/2025,Q1,Sindh,CUST-4449,Standard,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,70,290,20300,4,3290,Actual
+1053,3/26/2025,Q1,Punjab,CUST-1221,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,70,725,50750,4,2753,Actual
+1054,3/28/2025,Q1,Balochistan,CUST-8555,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,50,560,28000,4,1330,Actual
+1055,3/29/2025,Q1,Sindh,CUST-6999,Contractor,P-EXT-03,Walmasta,Exterior Paint,200,325,65000,4,3835,Actual
+1056,3/31/2025,Q1,Khyber Pakhtunkhwa,CUST-7810,Premium,P-WFN-02,Gloss Lacquer,Wood Finish,18,700,12600,4,1347,Actual
+1057,4/1/2025,Q2,Punjab,CUST-3838,Standard,P-ENM-02,NU Enamel,Enamels,30,455,13650,4.2,2445,Actual
+1058,4/3/2025,Q2,Sindh,CUST-5023,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,130,875,113750,4.2,1750,Actual
+1059,4/4/2025,Q2,Punjab,CUST-8898,Contractor,P-INT-05,MaxPro,Interior Emulsion,180,480,86400,4.2,3142,Actual
+1060,4/6/2025,Q2,Sindh,CUST-2005,Standard,P-PRM-03,Elegance Ultra Seal,Primers & Putty,55,315,17325,4.2,3805,Actual
+1061,4/7/2025,Q2,Punjab,CUST-4673,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,75,730,54750,4.2,2678,Actual
+1062,4/9/2025,Q2,Khyber Pakhtunkhwa,CUST-9713,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,90,285,25650,4.2,3230,Actual
+1062,4/9/2025,Q2,Khyber Pakhtunkhwa,CUST-9713,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,80,905,72400,4.2,1380,Actual
+1063,4/10/2025,Q2,Sindh,CUST-1438,Standard,P-WFN-01,Sanding Sealer,Wood Finish,30,675,20250,4.2,1410,Actual
+1064,4/12/2025,Q2,Punjab,CUST-7469,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,250,845,211250,4.2,1630,Actual
+1065,4/13/2025,Q2,Sindh,CUST-3382,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,120,880,105600,4.2,1620,Actual
+1066,4/15/2025,Q2,Balochistan,CUST-5888,Standard,P-EXT-03,Walmasta,Exterior Paint,65,335,21775,4.2,3770,Actual
+1067,4/16/2025,Q2,Punjab,CUST-9002,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,50,620,31000,4.2,2547,Actual
+1068,4/18/2025,Q2,Sindh,CUST-2111,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,100,290,29000,4.2,3190,Actual
+1069,4/19/2025,Q2,Khyber Pakhtunkhwa,CUST-6554,Premium,P-WFN-04,Imperia Polyester,Wood Finish,12,1120,13440,4.2,978,Actual
+1070,4/21/2025,Q2,Punjab,CUST-4991,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,85,570,48450,4.2,1245,Actual
+1071,4/22/2025,Q2,Sindh,CUST-8301,Premium,P-ENM-01,VIP Super Gloss Enamel,Enamels,45,600,27000,4.2,1860,Actual
+1072,4/24/2025,Q2,Punjab,CUST-1623,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,120,225,27000,4.2,3870,Actual
+1072,4/24/2025,Q2,Punjab,CUST-1623,Contractor,P-INT-02,Elegance Emulsion,Interior Emulsion,130,710,92300,4.2,2548,Actual
+1073,4/25/2025,Q2,Sindh,CUST-7240,Standard,P-INT-05,MaxPro,Interior Emulsion,70,485,33950,4.2,3072,Actual
+1074,4/27/2025,Q2,Punjab,CUST-3519,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,140,885,123900,4.2,1480,Actual
+1075,4/28/2025,Q2,Khyber Pakhtunkhwa,CUST-8109,Contractor,P-EXT-03,Walmasta,Exterior Paint,150,325,48750,4.2,3620,Actual
+1076,4/30/2025,Q2,Sindh,CUST-5775,Standard,P-WFN-02,Gloss Lacquer,Wood Finish,25,705,17625,4.5,1322,Actual
+1077,5/1/2025,Q2,Punjab,CUST-2444,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,70,915,64050,4.5,1310,Actual
+1078,5/3/2025,Q2,Sindh,CUST-9821,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,280,845,236600,4.5,1340,Actual
+1079,5/4/2025,Q2,Balochistan,CUST-4333,Standard,P-PRM-04,SPD Wall Putty,Primers & Putty,30,225,6750,4.5,4020,Actual
+1080,5/6/2025,Q2,Punjab,CUST-6112,Standard,P-ENM-02,NU Enamel,Enamels,38,460,17480,4.5,2407,Actual
+1081,5/7/2025,Q2,Sindh,CUST-7998,Premium,P-WFN-03,Imperia Grande,Wood Finish,18,940,16920,4.5,1155,Actual
+1082,5/9/2025,Q2,Punjab,CUST-1301,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,150,910,136500,4.5,1160,Actual
+1083,5/10/2025,Q2,Khyber Pakhtunkhwa,CUST-5643,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,45,725,32625,4.5,2503,Actual
+1084,5/12/2025,Q2,Sindh,CUST-3987,Standard,P-INT-01,Silk Emulsion,Interior Emulsion,80,880,70400,4.5,1540,Actual
+1085,5/13/2025,Q2,Punjab,CUST-8534,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,160,890,142400,4.5,1320,Actual
+1086,5/15/2025,Q2,Sindh,CUST-2771,Contractor,P-INT-03,VIP Allrounder,Interior Emulsion,140,615,86100,4.5,2407,Actual
+1087,5/16/2025,Q2,Punjab,CUST-4205,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,100,575,57500,4.5,1145,Actual
+1088,5/18/2025,Q2,Balochistan,CUST-6776,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,30,920,27600,4.5,1280,Actual
+1089,5/19/2025,Q2,Sindh,CUST-9432,Contractor,P-PRM-02,Red Oxide Primer,Primers & Putty,90,360,32400,4.5,2780,Actual
+1089,5/19/2025,Q2,Sindh,CUST-9432,Contractor,P-ENM-01,VIP Super Gloss Enamel,Enamels,80,590,47200,4.5,1830,Actual
+1090,5/21/2025,Q2,Khyber Pakhtunkhwa,CUST-1999,Standard,P-WFN-01,Sanding Sealer,Wood Finish,28,680,19040,4.5,1382,Actual
+1091,5/22/2025,Q2,Punjab,CUST-5810,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,85,735,62475,4.5,2418,Actual
+1092,5/24/2025,Q2,Sindh,CUST-7515,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,50,605,30250,4.5,1810,Actual
+1093,5/25/2025,Q2,Punjab,CUST-3210,Contractor,P-EXT-03,Walmasta,Exterior Paint,220,330,72600,4.5,3400,Actual
+1094,5/27/2025,Q2,Sindh,CUST-6888,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,180,895,161100,4.5,1360,Actual
+1095,5/28/2025,Q2,Punjab,CUST-1088,Standard,P-INT-04,Elegance Desire,Interior Emulsion,40,665,26600,4.5,3101,Actual
+1096,5/30/2025,Q2,Khyber Pakhtunkhwa,CUST-8001,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,100,295,29500,4.8,3210,Actual
+1096,5/30/2025,Q2,Khyber Pakhtunkhwa,CUST-8001,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,170,850,144500,4.8,1190,Actual
+1097,5/31/2025,Q2,Sindh,CUST-4589,Premium,P-WFN-04,Imperia Polyester,Wood Finish,15,1130,16950,4.8,963,Actual
+1098,6/1/2025,Q2,Punjab,CUST-9123,Standard,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,80,295,23600,4.8,3110,Actual
+1099,6/2/2025,Q2,Sindh,CUST-5335,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,180,570,102600,4.8,965,Actual
+1100,6/3/2025,Q2,Punjab,CUST-2651,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,90,925,83250,4.8,1190,Actual
+1101,6/4/2025,Q2,Sindh,CUST-7707,Standard,P-INT-05,MaxPro,Interior Emulsion,85,490,41650,4.8,2987,Actual
+1102,6/5/2025,Q2,Punjab,CUST-1111,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,300,855,256500,4.8,1060,Actual
+1103,6/6/2025,Q2,Khyber Pakhtunkhwa,CUST-6446,Premium,P-WFN-01,Sanding Sealer,Wood Finish,35,690,24150,4.8,1347,Actual
+1104,6/7/2025,Q2,Sindh,CUST-8888,Standard,P-EXT-03,Walmasta,Exterior Paint,150,335,50250,4.8,3250,Actual
+1105,6/8/2025,Q2,Punjab,CUST-4774,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,150,905,135750,4.8,1210,Actual
+1106,6/9/2025,Q2,Sindh,CUST-3131,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,200,920,184000,4.8,990,Actual
+1107,6/10/2025,Q2,Punjab,CUST-9229,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,60,740,44400,4.8,2358,Actual
+1108,6/11/2025,Q2,Balochistan,CUST-7818,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,80,575,46000,4.8,885,Actual
+1109,6/12/2025,Q2,Sindh,CUST-5454,Premium,P-WFN-02,Gloss Lacquer,Wood Finish,30,715,21450,4.8,1292,Actual
+1110,6/13/2025,Q2,Punjab,CUST-2398,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,60,610,36600,4.8,1750,Actual
+1111,6/14/2025,Q2,Khyber Pakhtunkhwa,CUST-8631,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,55,625,34375,4.8,2352,Actual
+1112,6/15/2025,Q2,Sindh,CUST-6591,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,250,225,56250,4.8,3750,Actual
+1112,6/15/2025,Q2,Sindh,CUST-6591,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,320,850,272000,4.8,1030,Actual
+1113,6/16/2025,Q2,Punjab,CUST-1911,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,110,930,102300,4.8,1080,Actual
+1114,6/17/2025,Q2,Sindh,CUST-7001,Standard,P-PRM-03,Elegance Ultra Seal,Primers & Putty,70,320,22400,4.8,3735,Actual
+1115,6/18/2025,Q2,Punjab,CUST-4005,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,250,575,143750,4.8,635,Actual
+1116,6/19/2025,Q2,Sindh,CUST-9555,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,200,910,182000,4.8,1010,Actual
+1117,6/20/2025,Q2,Khyber Pakhtunkhwa,CUST-3301,Contractor,P-EXT-03,Walmasta,Exterior Paint,180,330,59400,4.8,3070,Actual
+1118,6/21/2025,Q2,Punjab,CUST-5050,Standard,P-INT-04,Elegance Desire,Interior Emulsion,50,670,33500,4.8,3051,Actual
+1119,6/22/2025,Q2,Sindh,CUST-2222,Premium,P-WFN-03,Imperia Grande,Wood Finish,22,950,20900,4.8,1133,Actual
+1120,7/2/2025,Q3,Sindh,CUST-7811,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,40,630,25200,4.6,2367,Forecast
+1121,7/4/2025,Q3,Punjab,CUST-1342,Premium,P-WFN-01,Sanding Sealer,Wood Finish,25,695,17375,4.6,1322,Forecast
+1122,7/6/2025,Q3,Punjab,CUST-8133,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,120,230,27600,4.6,3800,Forecast
+1122,7/6/2025,Q3,Punjab,CUST-8133,Contractor,P-INT-02,Elegance Emulsion,Interior Emulsion,150,725,108750,4.6,2228,Forecast
+1123,7/8/2025,Q3,Khyber Pakhtunkhwa,CUST-5643,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,70,580,40600,4.6,815,Forecast
+1124,7/10/2025,Q3,Sindh,CUST-6767,Standard,P-EXT-04,Quick-dry enamel paint,Exterior Paint,25,465,11625,4.6,60,Forecast
+1125,7/12/2025,Q3,Punjab,CUST-3887,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,160,920,147200,4.6,670,Forecast
+1126,7/14/2025,Q3,Sindh,CUST-1579,Contractor,P-INT-05,MaxPro,Interior Emulsion,180,500,90000,4.6,2587,Forecast
+1127,7/16/2025,Q3,Balochistan,CUST-7818,Contractor,P-EXT-03,Walmasta,Exterior Paint,50,340,17000,4.6,3020,Forecast
+1128,7/18/2025,Q3,Khyber Pakhtunkhwa,CUST-8631,Standard,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,60,300,18000,4.6,3050,Forecast
+1129,7/20/2025,Q3,Punjab,CUST-4774,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,80,935,74800,4.6,1000,Forecast
+1130,7/22/2025,Q3,Sindh,CUST-2222,Premium,P-WFN-03,Imperia Grande,Wood Finish,20,955,19100,4.6,1113,Forecast
+1131,7/24/2025,Q3,Punjab,CUST-6591,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,280,855,239400,4.6,750,Forecast
+1132,7/26/2025,Q3,Sindh,CUST-9229,Standard,P-INT-04,Elegance Desire,Interior Emulsion,45,675,30375,4.6,3006,Forecast
+1133,7/28/2025,Q3,Punjab,CUST-1911,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,90,745,67050,4.6,2268,Forecast
+1134,7/30/2025,Q3,Sindh,CUST-7001,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,50,615,30750,4.6,1655,Forecast
+1135,8/1/2025,Q3,Punjab,CUST-4005,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,220,580,127600,4.7,415,Forecast
+1136,8/3/2025,Q3,Khyber Pakhtunkhwa,CUST-3301,Contractor,P-EXT-03,Walmasta,Exterior Paint,150,335,50250,4.7,2920,Forecast
+1137,8/5/2025,Q3,Sindh,CUST-9555,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,180,915,163800,4.7,830,Forecast
+1138,8/7/2025,Q3,Punjab,CUST-5050,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,60,635,38100,4.7,2307,Forecast
+1139,8/9/2025,Q3,Balochistan,CUST-2998,Contractor,P-PRM-02,Red Oxide Primer,Primers & Putty,40,360,14400,4.7,2785,Forecast
+1140,8/11/2025,Q3,Sindh,CUST-8902,Standard,P-WFN-02,Gloss Lacquer,Wood Finish,28,720,20160,4.7,1264,Forecast
+1141,8/13/2025,Q3,Punjab,CUST-1776,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,250,860,215000,4.7,580,Forecast
+1142,8/15/2025,Q3,Sindh,CUST-6421,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,100,940,94000,4.7,900,Forecast
+1143,8/17/2025,Q3,Khyber Pakhtunkhwa,CUST-7652,Standard,P-ENM-02,NU Enamel,Enamels,30,465,13950,4.7,2445,Forecast
+1144,8/19/2025,Q3,Punjab,CUST-4501,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,50,750,37500,4.7,2218,Forecast
+1145,8/21/2025,Q3,Sindh,CUST-9110,Premium,P-WFN-04,Imperia Polyester,Wood Finish,15,1140,17100,4.7,948,Forecast
+1146,8/23/2025,Q3,Punjab,CUST-5001,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,180,585,105300,4.7,235,Forecast
+1147,8/25/2025,Q3,Sindh,CUST-2345,Premium,P-PRM-03,Elegance Ultra Seal,Primers & Putty,45,325,14625,4.7,3690,Forecast
+1147,8/25/2025,Q3,Sindh,CUST-2345,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,150,920,138000,4.7,680,Forecast
+1148,8/27/2025,Q3,Punjab,CUST-8083,Standard,P-PRM-04,SPD Wall Putty,Primers & Putty,60,230,13800,4.7,3990,Forecast
+1149,8/29/2025,Q3,Khyber Pakhtunkhwa,CUST-7390,Standard,P-INT-05,MaxPro,Interior Emulsion,80,505,40400,4.7,2507,Forecast
+1150,8/31/2025,Q3,Sindh,CUST-1588,Contractor,P-INT-02,Elegance Emulsion,Interior Emulsion,130,730,94900,4.7,2088,Forecast
+1151,9/2/2025,Q3,Punjab,CUST-6899,Premium,P-WFN-01,Sanding Sealer,Wood Finish,30,700,21000,4.9,1292,Forecast
+1152,9/4/2025,Q3,Balochistan,CUST-8555,Standard,P-EXT-03,Walmasta,Exterior Paint,70,340,23800,4.9,2950,Forecast
+1153,9/6/2025,Q3,Sindh,CUST-3030,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,100,590,59000,4.9,135,Forecast
+1154,9/8/2025,Q3,Punjab,CUST-4752,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,250,225,56250,4.9,3670,Forecast
+1154,9/8/2025,Q3,Punjab,CUST-4752,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,300,865,259500,4.9,380,Forecast
+1155,9/10/2025,Q3,Khyber Pakhtunkhwa,CUST-8813,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,60,925,55500,4.9,620,Forecast
+1156,9/12/2025,Q3,Sindh,CUST-1045,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,55,620,34100,4.9,1600,Forecast
+1157,9/14/2025,Q3,Punjab,CUST-7762,Contractor,P-INT-03,VIP Allrounder,Interior Emulsion,150,640,96000,4.9,2157,Forecast
+1158,9/16/2025,Q3,Sindh,CUST-5521,Premium,P-WFN-03,Imperia Grande,Wood Finish,22,960,21120,4.9,1091,Forecast
+1159,9/18/2025,Q3,Punjab,CUST-9901,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,60,755,45300,4.9,2028,Forecast
+1160,9/20/2025,Q3,Sindh,CUST-2843,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,150,945,141750,4.9,750,Forecast
+1161,9/22/2025,Q3,Khyber Pakhtunkhwa,CUST-6211,Standard,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,75,305,22875,4.9,2975,Forecast
+1162,9/24/2025,Q3,Punjab,CUST-4118,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,200,930,186000,4.9,420,Forecast
+1163,9/26/2025,Q3,Sindh,CUST-3141,Contractor,P-INT-02,Elegance Emulsion,Interior Emulsion,180,735,132300,4.9,1848,Forecast
+1164,9/28/2025,Q3,Balochistan,CUST-8190,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,60,590,35400,4.9,75,Forecast
+1165,9/30/2025,Q3,Punjab,CUST-1835,Contractor,P-EXT-03,Walmasta,Exterior Paint,250,335,83750,4.9,2670,Forecast
+1166,10/1/2025,Q4,Punjab,CUST-8534,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,180,925,166500,5.5,1140,Forecast
+1167,10/3/2025,Q4,Sindh,CUST-3131,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,200,300,60000,5.5,2805,Forecast
+1167,10/3/2025,Q4,Sindh,CUST-3131,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,250,940,235000,5.5,740,Forecast
+1168,10/5/2025,Q4,Khyber Pakhtunkhwa,CUST-5643,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,70,760,53200,5.5,1958,Forecast
+1169,10/7/2025,Q4,Punjab,CUST-4205,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,150,595,89250,5.5,85,Forecast
+1170,10/9/2025,Q4,Sindh,CUST-6888,Premium,P-WFN-01,Sanding Sealer,Wood Finish,40,710,28400,5.5,1252,Forecast
+1171,10/11/2025,Q4,Punjab,CUST-1111,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,350,870,304500,5.5,50,Forecast
+1172,10/13/2025,Q4,Balochistan,CUST-6776,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,50,950,47500,5.5,690,Forecast
+1173,10/15/2025,Q4,Sindh,CUST-9432,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,120,310,37200,5.5,2855,Forecast
+1174,10/17/2025,Q4,Punjab,CUST-5810,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,100,765,76500,5.5,1858,Forecast
+1175,10/19/2025,Q4,Khyber Pakhtunkhwa,CUST-1999,Standard,P-WFN-02,Gloss Lacquer,Wood Finish,30,730,21900,5.5,1262,Forecast
+1176,10/21/2025,Q4,Sindh,CUST-3210,Contractor,P-EXT-03,Walmasta,Exterior Paint,300,340,102000,5.5,2370,Forecast
+1177,10/23/2025,Q4,Punjab,CUST-7515,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,70,625,43750,5.5,1530,Forecast
+1178,10/25/2025,Q4,Sindh,CUST-1088,Standard,P-INT-04,Elegance Desire,Interior Emulsion,60,680,40800,5.5,2946,Forecast
+1179,10/27/2025,Q4,Punjab,CUST-8001,Contractor,P-PRM-04,SPD Wall Putty,Primers & Putty,220,230,50600,5.5,3500,Forecast
+1179,10/27/2025,Q4,Punjab,CUST-8001,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,280,875,245000,5.5,100,Forecast
+1180,10/29/2025,Q4,Sindh,CUST-4589,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,180,955,171900,5.5,510,Forecast
+1181,10/31/2025,Q4,Khyber Pakhtunkhwa,CUST-9123,Standard,P-INT-05,MaxPro,Interior Emulsion,100,510,51000,5.5,2407,Forecast
+1182,11/2/2025,Q4,Punjab,CUST-5335,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,200,600,120000,5.8,115,Forecast
+1183,11/4/2025,Q4,Sindh,CUST-2651,Premium,P-WFN-03,Imperia Grande,Wood Finish,25,970,24250,5.8,1066,Forecast
+1184,11/6/2025,Q4,Punjab,CUST-7707,Standard,P-INT-01,Silk Emulsion,Interior Emulsion,150,935,140250,5.8,270,Forecast
+1185,11/8/2025,Q4,Balochistan,CUST-4333,Standard,P-EXT-03,Walmasta,Exterior Paint,80,345,27600,5.8,2590,Forecast
+1186,11/10/2025,Q4,Sindh,CUST-6446,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,120,770,92400,5.8,1738,Forecast
+1187,11/12/2025,Q4,Punjab,CUST-8888,Standard,P-ENM-02,NU Enamel,Enamels,50,475,23750,5.8,2395,Forecast
+1188,11/14/2025,Q4,Sindh,CUST-4774,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,220,960,211200,5.8,290,Forecast
+1189,11/16/2025,Q4,Khyber Pakhtunkhwa,CUST-3131,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,200,880,176000,5.8,180,Forecast
+1190,11/18/2025,Q4,Punjab,CUST-9229,Standard,P-PRM-04,SPD Wall Putty,Primers & Putty,100,235,23500,5.8,3890,Forecast
+1191,11/20/2025,Q4,Sindh,CUST-5454,Premium,P-WFN-04,Imperia Polyester,Wood Finish,18,1150,20700,5.8,930,Forecast
+1192,11/22/2025,Q4,Punjab,CUST-2398,Standard,P-INT-03,VIP Allrounder,Interior Emulsion,80,650,52000,5.8,2077,Forecast
+1193,11/24/2025,Q4,Sindh,CUST-8631,Standard,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,180,605,108900,5.8,10,Forecast
+1194,11/26/2025,Q4,Punjab,CUST-6591,Contractor,P-PRM-01,Plastron Wall Primer Sealer,Primers & Putty,350,290,101500,5.8,2955,Forecast
+1194,11/26/2025,Q4,Punjab,CUST-6591,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,400,885,354000,5.8,10,Forecast
+1195,11/28/2025,Q4,Khyber Pakhtunkhwa,CUST-1911,Premium,P-EXT-01,Weathercoat Glow 365,Exterior Paint,130,965,125450,5.8,160,Forecast
+1196,11/30/2025,Q4,Sindh,CUST-7001,Standard,P-INT-02,Elegance Emulsion,Interior Emulsion,80,775,62000,5.8,1658,Forecast
+1197,12/2/2025,Q4,Punjab,CUST-4005,Contractor,P-EXT-03,Walmasta,Exterior Paint,350,345,120750,6,2240,Forecast
+1198,12/4/2025,Q4,Sindh,CUST-9555,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,250,940,235000,6,10,Forecast
+1199,12/6/2025,Q4,Punjab,CUST-3301,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,380,890,338200,6,10,Forecast
+1200,12/8/2025,Q4,Balochistan,CUST-7818,Contractor,P-PRM-02,Red Oxide Primer,Primers & Putty,60,365,21900,6,2725,Forecast
+1201,12/10/2025,Q4,Khyber Pakhtunkhwa,CUST-5050,Standard,P-INT-04,Elegance Desire,Interior Emulsion,70,685,47950,6,2876,Forecast
+1202,12/12/2025,Q4,Sindh,CUST-2222,Premium,P-WFN-01,Sanding Sealer,Wood Finish,45,715,32175,6,1207,Forecast
+1203,12/14/2025,Q4,Punjab,CUST-8133,Contractor,P-EXT-01,Weathercoat Glow 365,Exterior Paint,280,970,271600,6,10,Forecast
+1204,12/16/2025,Q4,Sindh,CUST-6767,Standard,P-EXT-04,Quick-dry enamel paint,Exterior Paint,40,470,18800,6,20,Forecast
+1205,12/18/2025,Q4,Punjab,CUST-3887,Premium,P-INT-02,Elegance Emulsion,Interior Emulsion,140,780,109200,6,1518,Forecast
+1206,12/20/2025,Q4,Khyber Pakhtunkhwa,CUST-1579,Contractor,P-EXT-02,WeatherCoat Anti Dustt,Exterior Paint,220,610,134200,6,10,Forecast
+1207,12/22/2025,Q4,Sindh,CUST-7811,Standard,P-INT-05,MaxPro,Interior Emulsion,120,515,61800,6,2287,Forecast
+1208,12/24/2025,Q4,Punjab,CUST-1342,Premium,P-INT-01,Silk Emulsion,Interior Emulsion,220,945,207900,6,10,Forecast
+1209,12/26/2025,Q4,Sindh,CUST-8133,Contractor,P-INT-01,Silk Emulsion,Interior Emulsion,450,895,402750,6,10,Forecast
+1210,12/28/2025,Q4,Punjab,CUST-5643,Standard,P-EXT-03,Walmasta,Exterior Paint,180,350,63000,6,2060,Forecast
+1211,12/30/2025,Q4,Sindh,CUST-6767,Premium,P-WFN-03,Imperia Grande,Wood Finish,30,975,29250,6,1036,Forecast
+1212,12/31/2025,Q4,Punjab,CUST-3887,Standard,P-ENM-01,VIP Super Gloss Enamel,Enamels,60,630,37800,6,1470,Forecast

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Client Test Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: #28a745;
+        }
+
+        .status-dot.disconnected {
+            background: #dc3545;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 0;
+            height: calc(100vh - 240px);
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tools-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .tools-list h4 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .tools-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tools-list li {
+            padding: 5px 0;
+            color: #6c757d;
+        }
+
+        .tools-list li::before {
+            content: "🔧 ";
+            margin-right: 5px;
+        }
+
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: #f1f3f5;
+            color: #212529;
+        }
+
+        .tool-execution {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .tool-execution h5 {
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+
+        .tool-execution pre {
+            background: white;
+            padding: 5px;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .input-container button {
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .input-container button:hover:not(:disabled) {
+            background: #5568d3;
+        }
+
+        .input-container button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            color: #6c757d;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 MCP Client Test Interface</h1>
+            <p>FastAPI + HTML Frontend</p>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <div class="status-dot disconnected" id="statusDot"></div>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <span>💬 Messages:</span>
+                    <span id="messageCount">0</span>
+                </div>
+                <div class="stat">
+                    <span>🔧 Tool Calls:</span>
+                    <span id="toolCallCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>⚙️ Configuration</h3>
+                
+                <div class="form-group">
+                    <label for="serverSelect">MCP Server</label>
+                    <select id="serverSelect">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modelSelect">Model</label>
+                    <select id="modelSelect">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" id="connectBtn" onclick="connect()">
+                    🔌 Connect
+                </button>
+
+                <button class="btn btn-danger" id="disconnectBtn" onclick="disconnect()" disabled>
+                    🔌 Disconnect
+                </button>
+
+                <button class="btn btn-secondary" id="clearBtn" onclick="clearChat()" disabled>
+                    🗑️ Clear Chat
+                </button>
+
+                <div class="tools-list" id="toolsList" style="display: none;">
+                    <h4>📦 Available Tools</h4>
+                    <ul id="toolsItems"></ul>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <div class="messages" id="messages">
+                    <div style="text-align: center; color: #6c757d; padding: 50px 20px;">
+                        <h3>👋 Welcome!</h3>
+                        <p>Connect to an MCP server to start chatting</p>
+                    </div>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>Processing...</span>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Type your message..." 
+                            disabled
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button id="sendBtn" onclick="sendMessage()" disabled>
+                            Send 📤
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let isConnected = false;
+        let messageCount = 0;
+        let toolCallCount = 0;
+
+        // Load initial data
+        async function loadServers() {
+            try {
+                const response = await fetch(`${API_URL}/api/servers`);
+                const data = await response.json();
+                const select = document.getElementById('serverSelect');
+                select.innerHTML = data.servers.map(s => `<option value="${s}">${s}</option>`).join('');
+            } catch (error) {
+                console.error('Failed to load servers:', error);
+            }
+        }
+
+        async function loadModels() {
+            try {
+                const response = await fetch(`${API_URL}/api/models`);
+                const data = await response.json();
+                const select = document.getElementById('modelSelect');
+                select.innerHTML = data.models.map(m => `<option value="${m}">${m}</option>`).join('');
+            } catch (error) {
+                console.error('Failed to load models:', error);
+            }
+        }
+
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_URL}/api/status`);
+                const data = await response.json();
+                updateUIStatus(data.connected, data);
+            } catch (error) {
+                console.error('Failed to check status:', error);
+            }
+        }
+
+        function updateUIStatus(connected, data = {}) {
+            isConnected = connected;
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const toolsList = document.getElementById('toolsList');
+            const toolsItems = document.getElementById('toolsItems');
+
+            if (connected) {
+                statusDot.className = 'status-dot connected';
+                statusText.textContent = `Connected (${data.model || 'Unknown'})`;
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                clearBtn.disabled = false;
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+
+                if (data.tools && data.tools.length > 0) {
+                    toolsList.style.display = 'block';
+                    toolsItems.innerHTML = data.tools.map(t => `<li>${t}</li>`).join('');
+                }
+
+                if (data.conversation_length !== undefined) {
+                    document.getElementById('messageCount').textContent = data.conversation_length;
+                }
+                if (data.tool_calls_made !== undefined) {
+                    document.getElementById('toolCallCount').textContent = data.tool_calls_made;
+                    toolCallCount = data.tool_calls_made;
+                }
+            } else {
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Not Connected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                clearBtn.disabled = true;
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                toolsList.style.display = 'none';
+            }
+        }
+
+        async function connect() {
+            const server = document.getElementById('serverSelect').value;
+            const model = document.getElementById('modelSelect').value;
+
+            if (!server || !model) {
+                alert('Please select both server and model');
+                return;
+            }
+
+            const connectBtn = document.getElementById('connectBtn');
+            connectBtn.disabled = true;
+            connectBtn.textContent = '⏳ Connecting...';
+
+            try {
+                const response = await fetch(`${API_URL}/api/connect`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ server_name: server, model: model })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    updateUIStatus(true, data);
+                    addSystemMessage(`✅ Connected to ${server} with ${data.tool_count} tools`);
+                } else {
+                    alert(`Connection failed: ${data.detail}`);
+                    connectBtn.disabled = false;
+                    connectBtn.textContent = '🔌 Connect';
+                }
+            } catch (error) {
+                alert(`Connection error: ${error.message}`);
+                connectBtn.disabled = false;
+                connectBtn.textContent = '🔌 Connect';
+            }
+        }
+
+        async function disconnect() {
+            try {
+                const response = await fetch(`${API_URL}/api/disconnect`, { method: 'POST' });
+                const data = await response.json();
+                updateUIStatus(false);
+                addSystemMessage('🔌 Disconnected from server');
+            } catch (error) {
+                console.error('Disconnect error:', error);
+            }
+        }
+
+        async function clearChat() {
+            try {
+                await fetch(`${API_URL}/api/clear`, { method: 'POST' });
+                document.getElementById('messages').innerHTML = '';
+                messageCount = 0;
+                document.getElementById('messageCount').textContent = '0';
+                addSystemMessage('🗑️ Chat history cleared');
+            } catch (error) {
+                console.error('Clear error:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message to UI
+            addUserMessage(message);
+            input.value = '';
+            messageCount++;
+            document.getElementById('messageCount').textContent = messageCount;
+
+            // Show loading
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    addAssistantMessage(data.response, data.tool_calls);
+                    messageCount++;
+                    document.getElementById('messageCount').textContent = messageCount;
+                    
+                    if (data.tool_calls && data.tool_calls.length > 0) {
+                        toolCallCount += data.tool_calls.length;
+                        document.getElementById('toolCallCount').textContent = toolCallCount;
+                    }
+                } else {
+                    addSystemMessage(`❌ Error: ${data.detail}`);
+                }
+            } catch (error) {
+                addSystemMessage(`❌ Error: ${error.message}`);
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function addUserMessage(text) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addAssistantMessage(text, toolCalls = []) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
+            
+            let toolCallsHtml = '';
+            if (toolCalls && toolCalls.length > 0) {
+                toolCallsHtml = toolCalls.map(tc => `
+                    <div class="tool-execution">
+                        <h5>🔧 ${tc.tool_name} (${tc.duration_ms.toFixed(1)}ms)</h5>
+                        <pre>${JSON.stringify(tc.arguments, null, 2)}</pre>
+                    </div>
+                `).join('');
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${escapeHtml(text)}
+                    ${toolCallsHtml}
+                </div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addSystemMessage(text) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <div class="message-content" style="background: #fff3cd; color: #856404; text-align: center; max-width: 100%;">
+                    ${escapeHtml(text)}
+                </div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        loadServers();
+        loadModels();
+        checkStatus();
+    </script>
+</body>
+</html>
