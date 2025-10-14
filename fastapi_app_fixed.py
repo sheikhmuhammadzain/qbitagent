@@ -53,9 +53,11 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# Get allowed origins from environment or use defaults
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://103.18.20.205:8091,http://localhost:8080").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://103.18.20.205:8091", "http://localhost:8080"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,6 +65,8 @@ app.add_middleware(
 
 # Session middleware (cookie-based sessions)
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "dev-secret-change-me")
+if SESSION_SECRET == "dev-secret-change-me":
+    logger.warning("⚠️  Using default session secret! Set SESSION_SECRET environment variable for production.")
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET, max_age=60 * 60 * 24 * 7)
 
 # Per-user client and agent instances

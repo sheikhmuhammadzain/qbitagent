@@ -90,6 +90,11 @@ const toUrl = (path: string) => {
   return `${API_BASE}${p}`;
 };
 
+// Ensure all requests include credentials for session cookies
+const defaultFetchOptions = {
+  credentials: "include" as RequestCredentials,
+};
+
 export const api = {
   async status(): Promise<StatusResponse> {
     const res = await fetch(toUrl("/status"), { credentials: "include" });
@@ -154,7 +159,14 @@ export const api = {
     return res.json();
   },
   async me(): Promise<{ username?: string | null }> {
-    const res = await fetch(toUrl("/auth/me"), { credentials: "include" });
+    const res = await fetch(toUrl("/auth/me"), { 
+      credentials: "include",
+      cache: "no-cache" // Prevent caching of auth status
+    });
+    if (!res.ok) {
+      // If auth check fails, return null username
+      return { username: null };
+    }
     return res.json();
   },
   async clear(): Promise<{ status: string; message?: string }> {

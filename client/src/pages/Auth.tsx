@@ -19,12 +19,20 @@ const Auth = () => {
   const from = (location.state as any)?.from?.pathname || "/chat";
 
   useEffect(() => {
+    let isMounted = true;
+    
     // Check if already authenticated
     api.me().then((r) => {
-      if (r.username) {
+      if (isMounted && r.username) {
         navigate(from, { replace: true });
       }
-    }).catch(() => {});
+    }).catch(() => {
+      // Silently handle auth check failure
+    });
+    
+    return () => {
+      isMounted = false;
+    };
   }, [navigate, from]);
 
   const handleSubmit = async () => {

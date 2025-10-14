@@ -27,13 +27,8 @@ const Index = () => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Protect route: redirect to /auth if not signed in
-  useEffect(() => {
-    fetch("/api/auth/me").then(async (r) => {
-      const data = await r.json();
-      if (!data.username) navigate("/auth");
-    }).catch(() => navigate("/auth"));
-  }, [navigate]);
+  // Note: Authentication is now handled by RequireAuth component
+  // No need for duplicate auth check here
 
   // Restore state from localStorage and load chat history
   useEffect(() => {

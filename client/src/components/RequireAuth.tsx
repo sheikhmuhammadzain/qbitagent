@@ -11,18 +11,28 @@ export const RequireAuth = ({ children }: RequireAuthProps) => {
   const location = useLocation();
 
   useEffect(() => {
+    let isMounted = true;
+    
     // Check if user is authenticated
     api.me()
       .then((response) => {
-        if (response.username) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
+        if (isMounted) {
+          if (response.username) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
         }
       })
       .catch(() => {
-        setIsAuthenticated(false);
+        if (isMounted) {
+          setIsAuthenticated(false);
+        }
       });
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Loading state
