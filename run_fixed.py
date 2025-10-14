@@ -25,7 +25,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "fastapi_app_fixed:app",
         host="0.0.0.0",
-        port=8000,
-        reload=False,
+        port=8090,
+        reload=True,
         log_level="info"
     )
