@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, CheckCircle2, Circle } from "lucide-react";
+import { toUrl } from "@/lib/api";
 
 // Notion logo SVG component
 const NotionLogo = ({ className = "w-5 h-5" }: { className?: string }) => (
@@ -56,7 +57,7 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
 
   const loadWorkspaces = async () => {
     try {
-      const res = await fetch("/api/notion/workspaces", {
+      const res = await fetch(toUrl("/notion/workspaces"), {
         credentials: "include",
         cache: "no-cache",
       });
@@ -83,7 +84,7 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
   const handleConnectNotion = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/notion/auth", {
+      const res = await fetch(toUrl("/notion/auth"), {
         credentials: "include",
       });
       
@@ -122,7 +123,7 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
   const handleConnectWorkspace = async (workspaceId: string) => {
     setConnectingWorkspace(workspaceId);
     try {
-      const res = await fetch(`/api/notion/connect?workspace_id=${workspaceId}`, {
+      const res = await fetch(toUrl(`/notion/connect?workspace_id=${workspaceId}`), {
         method: "POST",
         credentials: "include",
         cache: "no-cache",
@@ -171,7 +172,7 @@ export const NotionMCP = ({ onWorkspaceConnect, onWorkspacesChange }: NotionMCPP
 
   const handleDisconnectWorkspace = async (workspaceId: string) => {
     try {
-      const res = await fetch(`/api/notion/disconnect/${workspaceId}`, {
+      const res = await fetch(toUrl(`/notion/disconnect/${workspaceId}`), {
         method: "DELETE",
         credentials: "include",
       });

@@ -99,7 +99,7 @@ export const api = {
   async status(): Promise<StatusResponse> {
     const res = await fetch(toUrl("/status"), { credentials: "include" });
     if (!res.ok && res.status !== 401) throw new Error(`Status check failed: ${res.status}`);
-    if (res.status === 401) return { connected: false, server: null, model: null, tools: [], conversation_length: 0 };
+    if (res.status === 401) return { connected: false, server: null, model: null, tools: [] };
     return res.json();
   },
   async servers(): Promise<{ servers: string[]; count: number }> {
@@ -266,3 +266,6 @@ export const api = {
     return data;
   },
 };
+
+// Export toUrl for use in other components
+export { toUrl };
