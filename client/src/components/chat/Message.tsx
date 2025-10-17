@@ -279,29 +279,13 @@ export const Message = ({ message }: MessageProps) => {
                                     console.log("✅ Parsed tool result:", { type: parsed.type, hasSpec: !!parsed.spec, parsed });
                                     
                                     // Check for chart specification
-                                    // Case 1: Direct chart object
-                                    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.type === 'chart' && parsed.spec) {
+                                    if (parsed && typeof parsed === 'object' && parsed.type === 'chart' && parsed.spec) {
                                       console.log("📊 Rendering chart with spec:", parsed.spec);
                                       return (
                                         <div className="not-prose -mx-2.5 -mb-2.5">
                                           <ChartRenderer spec={parsed.spec} />
                                         </div>
                                       );
-                                    }
-
-                                    // Case 2: Array of structured content (e.g., structuredContent from MCP)
-                                    if (Array.isArray(parsed)) {
-                                      // Try to find a chart item in the array
-                                      const item = parsed.find((it: any) => it && typeof it === 'object' && (it.type === 'chart' || it.json?.type === 'chart' || it.spec));
-                                      const spec = item?.spec || item?.json?.spec || null;
-                                      if (spec && spec.x && spec.y && Array.isArray(spec.data)) {
-                                        console.log("📊 Rendering chart from array item spec:", spec);
-                                        return (
-                                          <div className="not-prose -mx-2.5 -mb-2.5">
-                                            <ChartRenderer spec={spec} />
-                                          </div>
-                                        );
-                                      }
                                     }
                                     
                                     // Pretty print JSON
