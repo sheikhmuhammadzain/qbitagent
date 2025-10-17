@@ -54,7 +54,7 @@
       ],
       "size_bytes": 12566528,
       "uploaded_at": "2025-10-11T16:05:31.493229Z",
-      "is_active": false
+      "is_active": true
     },
     {
       "id": "dbe06461-a388-462b-9e28-81f89f4800f8",
@@ -140,8 +140,23 @@
       ],
       "size_bytes": 40960,
       "uploaded_at": "2025-10-11T21:02:01.540103Z",
-      "is_active": true
+      "is_active": false
+    },
+    {
+      "id": "2c58b9e3-0dbb-40d0-8f15-39656e2644e7",
+      "name": "bergerpaints (1).db",
+      "original_file": "bergerpaints (1).csv",
+      "db_path": "uploads\\zain\\databases\\2c58b9e3-0dbb-40d0-8f15-39656e2644e7.db",
+      "tables": [
+        {
+          "name": "data",
+          "row_count": 212
+        }
+      ],
+      "size_bytes": 40960,
+      "uploaded_at": "2025-10-17T07:12:53.654671Z",
+      "is_active": false
     }
   ],
-  "active_database_id": "c4c07601-69e0-42fd-9b7e-31aec9f50305"
+  "active_database_id": "b56d30ef-8849-4ebf-83cf-8be1ee392a75"
 }

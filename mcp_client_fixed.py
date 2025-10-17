@@ -41,8 +41,41 @@ class MCPClient:
         
     async def connect(self) -> None:
         """Connect to MCP server"""
+        import sys
+        
+        # Diagnostic: Check event loop type on Windows
+        if sys.platform == 'win32':
+            loop = asyncio.get_event_loop()
+            loop_type = type(loop).__name__
+            logger.info(f"🔍 Windows Event Loop Check: {loop_type}")
+            
+            if not isinstance(loop, asyncio.ProactorEventLoop):
+                logger.error("=" * 80)
+                logger.error(f"❌❌❌ FATAL ERROR: Wrong Event Loop Type! ❌❌❌")
+                logger.error(f"Current: {loop_type}")
+                logger.error(f"Required: ProactorEventLoop")
+                logger.error("")
+                logger.error("Windows REQUIRES ProactorEventLoop for subprocess operations!")
+                logger.error("")
+                logger.error("SOLUTION:")
+                logger.error("1. STOP the server completely (Ctrl+C)")
+                logger.error("2. Kill all Python processes: taskkill /F /IM python.exe")
+                logger.error("3. Start with: python run_windows.py")
+                logger.error("   OR double-click: START_WINDOWS.bat")
+                logger.error("")
+                logger.error("DO NOT use 'python run_fixed.py' - it has reload mode enabled!")
+                logger.error("=" * 80)
+                
+                raise RuntimeError(
+                    f"Wrong event loop type on Windows: {loop_type}. "
+                    f"Subprocess operations will fail. Please restart with 'python run_windows.py'"
+                )
+        
         try:
             logger.info(f"Connecting to MCP server: {self.server_params.command}")
+            logger.info(f"Server command: {self.server_params.command}")
+            logger.info(f"Server args: {self.server_params.args}")
+            logger.info(f"Server env: {'SET' if self.server_params.env else 'None'}")
             
             # Create stdio client context
             self._stdio_context = stdio_client(self.server_params)
@@ -62,7 +95,9 @@ class MCPClient:
             logger.info("Successfully connected and initialized MCP session")
             
         except Exception as e:
-            logger.error(f"Failed to connect to MCP server: {e}")
+            import traceback
+            logger.error(f"Failed to connect to MCP server: {type(e).__name__}: {str(e)}")
+            logger.error(f"Full traceback:\n{traceback.format_exc()}")
             await self.close()
             raise
     
@@ -170,11 +205,23 @@ class MCPServerConfig:
     @staticmethod
     def get_configs() -> Dict[str, StdioServerParameters]:
         """Get predefined server configurations"""
+        import sys
+        import os
+        from pathlib import Path
+        
+        # Get absolute paths for production deployment
+        current_dir = Path(__file__).parent.resolve()
+        sqlite_server_script = str(current_dir / "sqlite_mcp_fastmcp.py")
+        default_db = str(current_dir / "example.db")
+        
+        # Use current Python interpreter (works in venv/production)
+        python_executable = sys.executable
+        
         return {
             "SQLite": StdioServerParameters(
-                command="python",
-                args=["sqlite_mcp_fastmcp.py", "example.db"],
-                env=None
+                command=python_executable,
+                args=["-u", sqlite_server_script, default_db],
+                env=os.environ.copy()
             ),
             "Filesystem": StdioServerParameters(
                 command="npx",

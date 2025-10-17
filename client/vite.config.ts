@@ -19,13 +19,7 @@ export default defineConfig(async ({ mode }) => {
     server: {
       host: "::",
       port: 8080,
-      proxy: {
-        "/api": {
-          target: process.env.VITE_API_PROXY_TARGET || "http://localhost:8000",
-          changeOrigin: true,
-          ws: true,
-        },
-      },
+      // No proxy - frontend will make direct API calls to backend
     },
     plugins,
     resolve: {

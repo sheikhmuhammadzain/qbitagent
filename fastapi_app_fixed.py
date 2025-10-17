@@ -5,8 +5,44 @@ Uses proper MCP SDK patterns based on official documentation
 import asyncio
 import json
 import logging
+import sys
 from typing import Optional, List, Dict, Any
 from datetime import datetime
+
+# Fix for Windows: Set ProactorEventLoop policy to support subprocesses
+# NOTE: Must happen BEFORE FastAPI imports, so we use print() not logger
+if sys.platform == 'win32':
+    # Check current loop and policy
+    current_policy = asyncio.get_event_loop_policy()
+    print(f"🔧 Windows detected - Current event loop policy: {type(current_policy).__name__}")
+    
+    # Set the correct policy
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+    print("✅ Set WindowsProactorEventLoopPolicy")
+    
+    # Try to get or create a new loop with the correct policy
+    try:
+        loop = asyncio.get_event_loop()
+        print(f"🔍 Current event loop type: {type(loop).__name__}")
+        
+        # If it's the wrong loop type, close it and create a new one
+        if not isinstance(loop, asyncio.ProactorEventLoop):
+            print(f"⚠️ Wrong event loop type ({type(loop).__name__}), recreating...")
+            if not loop.is_closed():
+                loop.close()
+            # Create new ProactorEventLoop
+            new_loop = asyncio.ProactorEventLoop()
+            asyncio.set_event_loop(new_loop)
+            print(f"✅ Created new ProactorEventLoop: {type(new_loop).__name__}")
+        else:
+            print(f"✅ Already using ProactorEventLoop - subprocess support enabled")
+    except RuntimeError as e:
+        print(f"⚠️ Could not get event loop: {e}, creating new one...")
+        # Create a new one
+        new_loop = asyncio.ProactorEventLoop()
+        asyncio.set_event_loop(new_loop)
+        print(f"✅ Created new ProactorEventLoop: {type(new_loop).__name__}")
+    print("=" * 80)
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from fastapi.responses import FileResponse, StreamingResponse
@@ -212,6 +248,23 @@ class AuthRequest(BaseModel):
 @app.on_event("startup")
 async def on_startup():
     global web_search_client
+    
+    # Diagnostic: Check event loop type on Windows
+    if sys.platform == 'win32':
+        loop = asyncio.get_event_loop()
+        loop_type = type(loop).__name__
+        policy = type(asyncio.get_event_loop_policy()).__name__
+        logger.info(f"🔍 Event Loop Diagnostics:")
+        logger.info(f"   Policy: {policy}")
+        logger.info(f"   Loop Type: {loop_type}")
+        logger.info(f"   Is ProactorEventLoop: {isinstance(loop, asyncio.ProactorEventLoop)}")
+        
+        if not isinstance(loop, asyncio.ProactorEventLoop):
+            logger.error(f"❌ CRITICAL: Wrong event loop type! Got {loop_type}, need ProactorEventLoop")
+            logger.error("❌ Subprocess operations will FAIL! Please restart server.")
+        else:
+            logger.info("✅ Correct event loop for Windows subprocess support")
+    
     await init_app_db()
     
     # Initialize web search client
@@ -881,10 +934,14 @@ async def switch_database(request: dict, http_request: Request):
                     logger.warning(f"Error closing previous client: {e}")
             
             # Create new server config for this database
+            # Use absolute paths for production deployment
+            current_dir = Path(__file__).parent.resolve()
+            sqlite_server_script = str(current_dir / "sqlite_mcp_fastmcp.py")
+            
             server_config = StdioServerParameters(
-                command=sys.executable or "python",
-                args=["-u", "sqlite_mcp_fastmcp.py", str(Path(db_path).resolve())],
-                env=None,
+                command=sys.executable,
+                args=["-u", sqlite_server_script, str(Path(db_path).resolve())],
+                env=os.environ.copy(),
             )
             
             # Connect to new database
@@ -922,8 +979,14 @@ async def switch_database(request: dict, http_request: Request):
             
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions as-is
     except Exception as e:
-        logger.error(f"Database switch failed: {e}")
+        import traceback
+        logger.error(f"Database switch failed: {type(e).__name__}: {str(e)}")
+        logger.error(f"Full traceback:\n{traceback.format_exc()}")
+        logger.error(f"Database path attempted: {db_path if 'db_path' in locals() else 'N/A'}")
+        logger.error(f"Server script: {sqlite_server_script if 'sqlite_server_script' in locals() else 'N/A'}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
