@@ -47,7 +47,7 @@ if __name__ == "__main__":
     config_kwargs = {
         "app": "fastapi_app_fixed:app",
         "host": "0.0.0.0",
-        "reload": True,
+        "reload": False,
         "port": 8090,
         "log_level": "info"
     }

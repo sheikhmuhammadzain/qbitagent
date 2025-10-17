@@ -324,6 +324,55 @@ export const Sidebar = ({
             <span className="font-medium text-foreground">{messageCount}</span>
           </div>
         </div>
+        
+        {/* Active Connections Summary */}
+        {tools.length > 0 && (() => {
+          const sqliteTools = tools.filter(t => t.source === 'SQLite');
+          const webSearchTools = tools.filter(t => t.source === 'WebSearch');
+          const notionTools = tools.filter(t => t.source?.startsWith('Notion'));
+          
+          return (
+            <div className="bg-card/50 rounded-lg p-3 space-y-2">
+              <h3 className="text-xs font-semibold text-muted-foreground mb-2">Active Connections</h3>
+              
+              {sqliteTools.length > 0 && (
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                    <span className="text-foreground">SQLite MCP</span>
+                  </div>
+                  <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-[10px] h-4">
+                    {sqliteTools.length} tools
+                  </Badge>
+                </div>
+              )}
+              
+              {webSearchTools.length > 0 && (
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+                    <span className="text-foreground">Web Search</span>
+                  </div>
+                  <Badge variant="outline" className="bg-green-500/20 text-green-300 border-green-500/30 text-[10px] h-4">
+                    {webSearchTools.length} tools
+                  </Badge>
+                </div>
+              )}
+              
+              {notionTools.length > 0 && (
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" />
+                    <span className="text-foreground">Notion MCP</span>
+                  </div>
+                  <Badge variant="outline" className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-[10px] h-4">
+                    {notionTools.length} tools
+                  </Badge>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Upload Data - Collapsible Section */}
         <div className="border border-white/10 rounded-lg bg-card/30 overflow-hidden">
@@ -446,16 +495,39 @@ export const Sidebar = ({
           <>
             <Separator className="bg-border/50" />
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-muted-foreground px-2">Available Tools</h3>
+              <div className="flex items-center justify-between px-2">
+                <h3 className="text-xs font-semibold text-muted-foreground">Available Tools</h3>
+                <Badge variant="outline" className="text-[10px] h-5">{tools.length}</Badge>
+              </div>
               <div className="space-y-1">
-                {tools.map((tool, index) => (
-                  <div key={index} className="bg-card/30 rounded-lg p-2.5 border border-border/30 hover:bg-card/50 transition-colors">
-                    <p className="font-medium text-xs text-foreground">{tool.name}</p>
-                    {tool.description && (
-                      <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{tool.description}</p>
-                    )}
-                  </div>
-                ))}
+                {tools.map((tool, index) => {
+                  // Determine badge color based on source
+                  const getBadgeColor = (source: string) => {
+                    if (source?.startsWith('Notion')) return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+                    if (source === 'WebSearch') return 'bg-green-500/20 text-green-300 border-green-500/30';
+                    if (source === 'SQLite') return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+                    return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+                  };
+                  
+                  return (
+                    <div key={index} className="bg-card/30 rounded-lg p-2.5 border border-border/30 hover:bg-card/50 transition-colors">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-medium text-xs text-foreground flex-1">{tool.name}</p>
+                        {tool.source && (
+                          <Badge 
+                            variant="outline" 
+                            className={`text-[9px] h-4 px-1.5 ${getBadgeColor(tool.source)}`}
+                          >
+                            {tool.source}
+                          </Badge>
+                        )}
+                      </div>
+                      {tool.description && (
+                        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{tool.description}</p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </>

@@ -536,7 +536,13 @@ async def get_status(http_request: Request):
 async def chat(request: ChatRequest, http_request: Request):
     """Send a chat message with intelligent LLM tool calling"""
     username = get_user_or_anonymous(http_request)
-    if user_clients.get(username) is None or user_agents.get(username) is None:
+    
+    # Check if we have any MCP servers (SQLite, Notion, or Web Search)
+    has_sqlite = user_clients.get(username) is not None
+    has_notion = username in user_notion_clients and len(user_notion_clients[username]) > 0
+    has_websearch = web_search_client is not None
+    
+    if not (has_sqlite or has_notion or has_websearch):
         raise HTTPException(status_code=400, detail="Not connected to MCP server. Connect first.")
     
     try:
@@ -545,8 +551,34 @@ async def chat(request: ChatRequest, http_request: Request):
         # Use LLM agent for intelligent response
         session_id = http_request.session.get("session_id") or str(uuid.uuid4())
         http_request.session["session_id"] = session_id
-        await hydrate_agent_if_empty(username, session_id, user_agents[username])
-        response_text, tool_calls = await user_agents[username].chat(request.message)
+        
+        # Use multi-server agent if Notion or WebSearch are available
+        if has_notion or has_websearch:
+            logger.info("🔀 Using multi-server agent (Notion/WebSearch detected)")
+            
+            # Create multi-server agent
+            from llm_multi_server import MultiServerLLMAgent
+            agent = MultiServerLLMAgent(model=DEFAULT_MODEL)
+            
+            # Register clients
+            if has_sqlite and user_clients.get(username):
+                agent.register_mcp_client("SQLite", user_clients[username])
+            
+            if has_notion:
+                for workspace_id, notion_client in user_notion_clients[username].items():
+                    agent.register_mcp_client(f"Notion_{workspace_id}", notion_client)
+            
+            if has_websearch:
+                agent.register_mcp_client("WebSearch", web_search_client)
+            
+            # Hydrate history
+            await hydrate_agent_if_empty(username, session_id, agent)
+            
+            response_text, tool_calls = await agent.chat(request.message)
+        else:
+            # Use regular agent (SQLite only)
+            await hydrate_agent_if_empty(username, session_id, user_agents[username])
+            response_text, tool_calls = await user_agents[username].chat(request.message)
         
         # Convert tool calls to response format
         tool_calls_list = [
