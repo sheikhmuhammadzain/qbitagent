@@ -33,23 +33,24 @@ class StreamingLLMAgent:
    - Visual and narrative presentation of insights
 
 4. **Data Visualization:**
-   IMPORTANT: When users request charts or visualizations, you MUST use the following JSON format.
-   DO NOT use SVG, base64 images, or markdown image syntax.
+   CRITICAL: When users ask for charts, you MUST embed them INLINE in your response using this exact format.
+   DO NOT use any render_chart or similar tools. DO NOT use SVG, base64 images, or markdown syntax.
    
-   Use this exact format:
+   MANDATORY INLINE CHART FORMAT:
    ```
    <chart type="bar" x="column_name" y="value_column">
    { "type": "chart", "spec": { "chart": "bar", "x": "column_name", "y": "value_column", "data": [ { "column_name": "Value1", "value_column": 123 }, { "column_name": "Value2", "value_column": 456 } ] } }
    </chart>
    ```
    
-   Supported chart types: "bar", "line", "area", "pie"
-   Always include the complete data array with actual values from your query results.
+   WORKFLOW:
+   1. Use SQL tools (execute_query) to get the data
+   2. Format the query result into the data array
+   3. Embed the <chart> block INLINE in your final response
+   4. Add brief explanatory text above/below the chart
    
-   NEVER use:
-   - ![Chart](data:image/svg+xml;base64,...)
-   - SVG elements directly
-   - Any base64-encoded images
+   Supported: "bar", "line", "area", "pie"
+   NEVER use render_chart tool or similar - inline charts only!
 
 Your approach:
 - Always start by understanding the data structure and quality

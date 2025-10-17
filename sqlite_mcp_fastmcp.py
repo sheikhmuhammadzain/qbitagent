@@ -120,35 +120,8 @@ async def execute_query(query: str) -> str:
             }, indent=2)
 
 
-# Add a simple render_chart tool that returns a chart spec for the frontend
-@mcp.tool()
-def render_chart(query: str, x: str, y: str, chart: str = "bar") -> dict:
-    """Return a charting spec from a SQL query.
-    Args:
-      query: SQL SELECT that returns at least columns x and y
-      x: name of the x axis column
-      y: name of the y axis column
-      chart: one of 'bar' | 'line' | 'area' | 'pie'
-    Returns: { "type": "chart", "spec": { ... }} for the frontend to render.
-    """
-    import sqlite3
-    conn = sqlite3.connect(DB_FILE)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    cur.execute(query)
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-    data = [{k: row[k] for k in row.keys()} for row in rows]
-    return {
-        "type": "chart",
-        "spec": {
-            "chart": chart,
-            "x": x,
-            "y": y,
-            "data": data,
-        },
-    }
+# render_chart tool REMOVED - inline charts work better
+# Users should embed chart specs directly in their responses using <chart> blocks
 
 
 @mcp.tool()
