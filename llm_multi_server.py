@@ -126,31 +126,37 @@ You have access to powerful tools for data querying and analysis across multiple
         
         for server_name, client in self.mcp_clients.items():
             try:
-                # Handle NotionMCPClient
+                # Handle NotionMCPClient and WebSearchClient
                 if hasattr(client, 'tools') and isinstance(client.tools, list):
+                    logger.info(f"  📋 Processing {len(client.tools)} tools from {server_name} (client.tools)")
                     for tool in client.tools:
+                        # Support both input_schema and inputSchema
+                        input_schema = tool.get('inputSchema') or tool.get('input_schema', {
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        })
+                        
                         openrouter_tool = {
                             "type": "function",
                             "function": {
                                 "name": tool.get('name', ''),
                                 "description": tool.get('description', f"Tool from {server_name}"),
-                                "parameters": tool.get('inputSchema', {
-                                    "type": "object",
-                                    "properties": {},
-                                    "required": []
-                                })
+                                "parameters": input_schema
                             }
                         }
                         all_tools.append(openrouter_tool)
+                        logger.debug(f"    ✓ Added tool: {tool.get('name', 'unknown')} from {server_name}")
                         
                         # Update routing
                         tool_name = tool.get('name', '')
                         if tool_name:
                             self.tool_routing[tool_name] = server_name
                 
-                # Handle MCPClient
+                # Handle MCPClient (SQLite)
                 elif hasattr(client, 'session') and client.session:
                     tools_result = await client.session.list_tools()
+                    logger.info(f"  📊 Processing {len(tools_result.tools)} tools from {server_name} (MCPClient)")
                     
                     for tool in tools_result.tools:
                         openrouter_tool = {
@@ -166,6 +172,7 @@ You have access to powerful tools for data querying and analysis across multiple
                             }
                         }
                         all_tools.append(openrouter_tool)
+                        logger.debug(f"    ✓ Added tool: {tool.name} from {server_name}")
                         
                         # Update routing
                         self.tool_routing[tool.name] = server_name

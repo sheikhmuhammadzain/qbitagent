@@ -555,6 +555,7 @@ async def chat(request: ChatRequest, http_request: Request):
         # Use multi-server agent if Notion or WebSearch are available
         if has_notion or has_websearch:
             logger.info("🔀 Using multi-server agent (Notion/WebSearch detected)")
+            logger.info(f"  has_sqlite={has_sqlite}, has_notion={has_notion}, has_websearch={has_websearch}")
             
             # Create multi-server agent
             from llm_multi_server import MultiServerLLMAgent
@@ -562,21 +563,39 @@ async def chat(request: ChatRequest, http_request: Request):
             
             # Register clients
             if has_sqlite and user_clients.get(username):
+                logger.info(f"✅ Registering SQLite MCP client for {username}")
                 agent.register_mcp_client("SQLite", user_clients[username])
+            else:
+                logger.warning(f"⚠️ SQLite client NOT registered: has_sqlite={has_sqlite}, client_exists={user_clients.get(username) is not None}")
             
             if has_notion:
                 for workspace_id, notion_client in user_notion_clients[username].items():
+                    logger.info(f"✅ Registering Notion MCP client: {workspace_id}")
                     agent.register_mcp_client(f"Notion_{workspace_id}", notion_client)
             
             if has_websearch:
+                logger.info("✅ Registering WebSearch client")
                 agent.register_mcp_client("WebSearch", web_search_client)
             
             # Hydrate history
             await hydrate_agent_if_empty(username, session_id, agent)
             
-            response_text, tool_calls = await agent.chat(request.message)
+            # MultiServerLLMAgent returns a dict, not a tuple
+            result = await agent.chat(request.message)
+            response_text = result.get("content", "")
+            # Convert dict tool_calls to ToolCall objects for compatibility
+            tool_calls = []
+            for tc in result.get("tool_calls", []):
+                # Create a simple object with the required attributes
+                tool_call_obj = type('ToolCall', (), {
+                    'tool_name': tc.get('tool', ''),
+                    'arguments': tc.get('arguments', {}),
+                    'result': tc.get('result', ''),
+                    'duration_ms': 0
+                })()
+                tool_calls.append(tool_call_obj)
         else:
-            # Use regular agent (SQLite only)
+            # Use regular agent (SQLite only) - returns tuple
             await hydrate_agent_if_empty(username, session_id, user_agents[username])
             response_text, tool_calls = await user_agents[username].chat(request.message)
         
