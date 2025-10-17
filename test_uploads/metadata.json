@@ -1,0 +1,26 @@
+{
+  "databases": [
+    {
+      "id": "18ce6077-30d6-4d7e-9466-c1cd2b0a8547",
+      "name": "test_data.db",
+      "original_file": "test_data.xlsx",
+      "db_path": "test_uploads\\databases\\18ce6077-30d6-4d7e-9466-c1cd2b0a8547.db",
+      "tables": [
+        {
+          "name": "sales_data",
+          "row_count": 5,
+          "column_count": 4
+        },
+        {
+          "name": "customers",
+          "row_count": 5,
+          "column_count": 4
+        }
+      ],
+      "size_bytes": 20480,
+      "uploaded_at": "2025-10-17T09:38:59.171134Z",
+      "is_active": false
+    }
+  ],
+  "active_database_id": null
+}

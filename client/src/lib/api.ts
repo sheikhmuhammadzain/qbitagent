@@ -185,7 +185,8 @@ export const api = {
     const url = new URL(toUrl("/chat/stream"), window.location.origin);
     url.searchParams.set("message", message);
 
-    const es = new EventSource(url.toString());
+    // IMPORTANT: include credentials so session cookies are sent (cross-origin SSE)
+    const es = new EventSource(url.toString(), { withCredentials: true });
 
     es.addEventListener("message", (evt) => {
       try {
