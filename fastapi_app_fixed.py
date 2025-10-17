@@ -381,6 +381,31 @@ async def connect_to_server(request: ConnectRequest, http_request: Request):
             # Create new client
             logger.info(f"Creating client for server: {request.server_name}")
             server_config = server_configs[request.server_name]
+            
+            # IMPORTANT: For SQLite server, use the currently selected database instead of example.db
+            if request.server_name == "SQLite":
+                active_database_id = http_request.session.get("active_database_id")
+                if active_database_id:
+                    # User has selected a database - use that instead of example.db
+                    pipeline = get_pipeline(username)
+                    try:
+                        db_metadata = pipeline.get_database_by_id(active_database_id)
+                        db_path = db_metadata["db_path"]
+                        
+                        # Override server config to use the selected database
+                        current_dir = Path(__file__).parent.resolve()
+                        sqlite_server_script = str(current_dir / "sqlite_mcp_fastmcp.py")
+                        
+                        server_config = StdioServerParameters(
+                            command=sys.executable,
+                            args=["-u", sqlite_server_script, str(Path(db_path).resolve())],
+                            env=os.environ.copy(),
+                        )
+                        logger.info(f"Using selected database: {db_metadata['name']} ({db_path})")
+                    except Exception as e:
+                        logger.warning(f"Could not load selected database, using default: {e}")
+                        # Fall back to default config
+            
             client = MCPClient(server_config)
             
             # Connect
@@ -851,9 +876,55 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         
         logger.info(f"File converted successfully: {result['database_id']}")
         
+        # AUTO-CONNECT: Automatically switch to and connect to the newly uploaded database
+        database_id = result['database_id']
+        db_path = result.get('db_path') or (pipeline.db_dir / f"{database_id}.db")
+        
+        logger.info(f"✅ Auto-connecting to uploaded database: {database_id}")
+        
+        lock = get_lock_for_user(username)
+        async with lock:
+            # Disconnect current client if any
+            if user_clients.get(username):
+                try:
+                    await user_clients[username].close()
+                except Exception as e:
+                    logger.warning(f"Error closing previous client: {e}")
+            
+            # Create new server config for uploaded database
+            current_dir = Path(__file__).parent.resolve()
+            sqlite_server_script = str(current_dir / "sqlite_mcp_fastmcp.py")
+            
+            server_config = StdioServerParameters(
+                command=sys.executable,
+                args=["-u", sqlite_server_script, str(Path(db_path).resolve())],
+                env=os.environ.copy(),
+            )
+            
+            # Connect to new database
+            client = MCPClient(server_config)
+            await client.connect()
+            
+            # Create agents
+            agent = LLMAgent(client, model=DEFAULT_MODEL)
+            streaming_agent = StreamingLLMAgent(client, model=DEFAULT_MODEL)
+            
+            user_clients[username] = client
+            user_agents[username] = agent
+            user_stream_agents[username] = streaming_agent
+            
+            # Update session
+            pipeline.update_active_database(database_id)
+            new_session_id = f"db_{database_id}"
+            request.session["session_id"] = new_session_id
+            request.session["active_database_id"] = database_id
+            
+            logger.info(f"✅ Auto-connected to uploaded database successfully")
+        
         return {
             "status": "success",
-            "message": "File uploaded and converted successfully",
+            "message": "File uploaded, converted, and connected successfully",
+            "connected": True,  # Signal to frontend that connection is active
             **result
         }
         
@@ -972,6 +1043,7 @@ async def switch_database(request: dict, http_request: Request):
             
             return {
                 "status": "success",
+                "connected": True,  # Signal to frontend that connection is active
                 "database_name": db_metadata["name"],
                 "database_id": database_id,
                 "tables": db_metadata.get("tables", [])

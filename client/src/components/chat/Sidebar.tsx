@@ -341,24 +341,34 @@ export const Sidebar = ({
           {uploadSectionExpanded && (
             <div className="px-4 pb-4">
               <FileUpload
-                onUploadSuccess={(result) => {
-                  // Soft refresh: reload database list and select the new DB without full page reload
-                  setTimeout(async () => {
-                    try {
-                      const list = await api.listDatabases();
-                      const latest = list.databases.find((d) => d.id === result.database_id) || list.databases[0];
-                      if (latest) {
-                        // Switch to the newly uploaded database
-                        await api.switchDatabase(latest.id);
-                        setConnected(true);
-                        // Update tools
-                        try {
-                          const status = await api.status();
-                          if (status.tools) setTools(status.tools);
-                        } catch {}
-                      }
-                    } catch {}
-                  }, 200);
+                onUploadSuccess={async (result) => {
+                  // Backend now auto-connects after upload - just refresh UI state
+                  console.log("Upload success, backend auto-connected to:", result.database_id);
+                  
+                  // Update connection state immediately (backend is already connected)
+                  setConnected(true);
+                  
+                  // Refresh tools and status to reflect the new database
+                  try {
+                    const status = await api.status();
+                    if (status.tools) {
+                      setTools(status.tools);
+                      console.log(`✅ Loaded ${status.tools.length} tools after upload`);
+                    }
+                    if (status.connected) {
+                      setConnected(true);
+                    }
+                  } catch (err) {
+                    console.error("Failed to refresh tools after upload:", err);
+                  }
+                  
+                  // Clear chat messages for new database
+                  setMessages([]);
+                  
+                  toast({
+                    title: "Database ready",
+                    description: `Connected to ${result.database_name}`,
+                  });
                 }}
               />
             </div>
