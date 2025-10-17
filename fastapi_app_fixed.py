@@ -674,9 +674,10 @@ async def chat_stream(message: str, http_request: Request):
             tool_calls_accum: list[dict[str, Any]] = []
 
             # Use multi-server agent if Notion or WebSearch are available
-            if has_notion or (has_websearch and not has_sqlite):
+            if has_notion or has_websearch:
                 # Use streaming multi-server agent
                 logger.info("🔀 Using streaming multi-server agent (Notion/WebSearch detected)")
+                logger.info(f"  has_sqlite={has_sqlite}, has_notion={has_notion}, has_websearch={has_websearch}")
                 
                 # Create streaming multi-server agent
                 from llm_multi_server_streaming import StreamingMultiServerLLMAgent
@@ -684,13 +685,18 @@ async def chat_stream(message: str, http_request: Request):
                 
                 # Register clients
                 if has_sqlite and user_clients.get(username):
+                    logger.info(f"✅ Registering SQLite MCP client for streaming (user: {username})")
                     agent.register_mcp_client("SQLite", user_clients[username])
+                else:
+                    logger.warning(f"⚠️ SQLite client NOT registered for streaming: has_sqlite={has_sqlite}, client_exists={user_clients.get(username) is not None}")
                 
                 if has_notion:
                     for workspace_id, notion_client in user_notion_clients[username].items():
+                        logger.info(f"✅ Registering Notion MCP client for streaming: {workspace_id}")
                         agent.register_mcp_client(f"Notion_{workspace_id}", notion_client)
                 
                 if has_websearch:
+                    logger.info("✅ Registering WebSearch client for streaming")
                     agent.register_mcp_client("WebSearch", web_search_client)
                 
                 # Hydrate history
