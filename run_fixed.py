@@ -47,17 +47,21 @@ if __name__ == "__main__":
     config_kwargs = {
         "app": "fastapi_app_fixed:app",
         "host": "0.0.0.0",
-        "port": 8000,
+        "reload": True,
+        "port": 8090,
         "log_level": "info"
     }
     
-    # On Windows, disable reload and use ProactorEventLoop
+    # Disable reload on all platforms - it breaks MCP subprocess connections
+    # The uvicorn reloader creates a subprocess which interferes with MCP client subprocesses
+    config_kwargs["reload"] = False
+    
     if sys.platform == 'win32':
-        config_kwargs["reload"] = False  # Reload breaks event loop on Windows
         config_kwargs["loop"] = "asyncio"
         print("✅ Windows: Using ProactorEventLoop (reload disabled for stability)")
         print("=" * 60)
     else:
-        config_kwargs["reload"] = True  # Enable reload on Linux/Mac
+        print("✅ Linux/Mac: Reload disabled to support MCP subprocess tools")
+        print("=" * 60)
     
     uvicorn.run(**config_kwargs)
